@@ -79,11 +79,11 @@ export default function Transport() {
   // Futuristic Header Dropdown Selector matching HudPanel layout patterns
   const TitleDropdown = (
     <div className="relative inline-flex items-center group">
-      <div className="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+      <div className="absolute inset-0 bg-accent-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       {selectedRoute.type === "bus" ? (
-        <Bus size={10} className="text-cyan-400 mr-1.5 animate-pulse" />
+        <Bus size={10} className="text-accent-400 mr-1.5 animate-pulse" />
       ) : (
-        <Train size={10} className="text-cyan-400 mr-1.5 animate-pulse" />
+        <Train size={10} className="text-accent-400 mr-1.5 animate-pulse" />
       )}
       <select
         value={selectedRoute.id}
@@ -92,15 +92,15 @@ export default function Transport() {
           if (found) setDepartures([]); // Temporary loading flash state clean
           if (found) setSelectedRoute(found);
         }}
-        className="appearance-none bg-transparent text-[10px] font-bold tracking-widest text-cyan-400 uppercase pr-5 cursor-pointer focus:outline-none selection:bg-slate-900 selection:text-cyan-300"
+        className="appearance-none bg-transparent text-[10px] font-bold tracking-widest text-accent-400 uppercase pr-5 cursor-pointer focus:outline-none selection:bg-slate-900 selection:text-accent-300"
       >
         {ROUTE_OPTIONS.map((opt) => (
-          <option key={opt.id} value={opt.id} className="bg-neutral-950 text-cyan-400 text-[10px] font-mono">
+          <option key={opt.id} value={opt.id} className="bg-neutral-950 text-accent-400 text-[10px] font-mono">
             {opt.label}
           </option>
         ))}
       </select>
-      <ChevronDown size={8} className="absolute right-0 text-cyan-400/50 pointer-events-none group-hover:text-cyan-400 transition-colors" />
+      <ChevronDown size={8} className="absolute right-0 text-accent-400/50 pointer-events-none group-hover:text-accent-400 transition-colors" />
     </div>
   );
 
@@ -109,14 +109,14 @@ export default function Transport() {
       <div className="flex justify-between items-center mb-3 -mt-1">
         <span />
         {live ? (
-          <span className="text-[8px] text-cyan-400/30 tracking-widest uppercase border-b border-cyan-400/20 px-1">LIVE FEED</span>
+          <span className="text-[8px] text-accent-400/30 tracking-widest uppercase border-b border-accent-400/20 px-1">LIVE FEED</span>
         ) : (
           <span className="text-[8px] text-amber-400/40 tracking-widest uppercase border-b border-amber-400/20 px-1">SCHED TIMELINE</span>
         )}
       </div>
 
       {departures.length === 0 ? (
-        <div className="text-[10px] text-cyan-400/30 text-center py-2 animate-pulse tracking-wider font-mono">INITIALIZING HUD DATA…</div>
+        <div className="text-[10px] text-accent-400/30 text-center py-2 animate-pulse tracking-wider font-mono">INITIALIZING HUD DATA…</div>
       ) : (
         <div className="space-y-2 font-mono">
           {departures.map((dep, i) => {
@@ -126,7 +126,7 @@ export default function Transport() {
                 key={i}
                 className={`flex items-center gap-3 border-l-2 py-0.5 pl-2 transition-colors ${
                   isNext 
-                    ? "border-cyan-400 bg-cyan-500/5 text-white" 
+                    ? "border-accent-400 bg-accent-500/5 text-white" 
                     : "border-transparent text-white/50 hover:bg-white/5"
                 }`}
               >
@@ -134,8 +134,8 @@ export default function Transport() {
                 <div
                   className={`shrink-0 text-[9px] font-bold px-1.5 py-0.5 border select-none ${
                     isNext
-                      ? "border-cyan-400 text-cyan-300 bg-cyan-950/50"
-                      : "border-cyan-500/20 text-cyan-500/40"
+                      ? "border-accent-400 text-accent-300 bg-accent-950/50"
+                      : "border-accent-500/20 text-accent-500/40"
                   }`}
                 >
                   {selectedRoute.line}
@@ -155,8 +155,8 @@ export default function Transport() {
                   <span
                     className={`text-[11px] font-bold ${
                       dep.minutes <= 1
-                        ? "text-cyan-400 tracking-widest drop-shadow-[0_0_4px_rgba(34,211,238,0.4)]"
-                        : isNext ? "text-cyan-300" : "text-cyan-500/40"
+                        ? "text-accent-400 tracking-widest drop-shadow-[0_0_4px_rgba(34,211,238,0.4)]"
+                        : isNext ? "text-accent-300" : "text-accent-500/40"
                     }`}
                   >
                     {formatMinutes(dep.minutes)}
@@ -166,7 +166,7 @@ export default function Transport() {
                       </span>
                     )}
                   </span>
-                  <div className="text-[8px] text-cyan-400/25 tracking-tighter">{dep.scheduled}</div>
+                  <div className="text-[8px] text-accent-400/25 tracking-tighter">{dep.scheduled}</div>
                 </div>
               </div>
             );
