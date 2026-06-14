@@ -1,4 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
+import type { RssItem, RssMediaContent, RssEnclosure } from "../../types/rss";
 
 function relativeTime(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -30,18 +31,18 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#\d+;/g, "").trim();
 }
 
-function extractImage(item: any): string | null {
+function extractImage(item: RssItem): string | null {
   // media:content url attribute
   const mc = item["media:content"];
   if (mc) {
-    const arr = Array.isArray(mc) ? mc : [mc];
+    const arr: RssMediaContent[] = Array.isArray(mc) ? mc : [mc];
     for (const m of arr) {
       const url = m?.["@_url"];
       if (url && typeof url === "string") return url;
     }
   }
   // enclosure
-  const enc = item["enclosure"];
+  const enc: RssEnclosure | undefined = item["enclosure"];
   if (enc?.["@_url"]) return enc["@_url"];
   // image inside description
   const desc = item.description ?? "";
@@ -69,7 +70,7 @@ export async function GET() {
   const result = parser.parse(xml);
   const items = result?.rss?.channel?.item ?? [];
 
-  const headlines = items.slice(0, 12).map((item: any, i: number) => {
+  const headlines = (items as RssItem[]).slice(0, 12).map((item, i: number) => {
     const title = String(item.title ?? "").replace(/&amp;/g, "&").replace(/&quot;/g, '"');
     const rawDesc = String(item.description ?? "");
     const description = stripHtml(rawDesc).slice(0, 400) || null;
