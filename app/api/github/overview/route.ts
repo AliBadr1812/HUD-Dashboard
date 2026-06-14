@@ -1,3 +1,5 @@
+import type { GitHubRepo, GitHubIssue, GitHubIssueSearchResponse, GitHubEvent } from "../../../types/github";
+
 const BASE = "https://api.github.com";
 
 export async function GET() {
@@ -23,7 +25,7 @@ export async function GET() {
     eventsRes.json(),
   ]);
 
-  const repos = (Array.isArray(reposData) ? reposData : []).map((r: any) => ({
+  const repos = (Array.isArray(reposData) ? reposData as GitHubRepo[] : []).map((r) => ({
     name: r.name,
     fullName: r.full_name,
     url: r.html_url,
@@ -34,7 +36,7 @@ export async function GET() {
     private: r.private,
   }));
 
-  const prs = (prsData.items ?? []).map((p: any) => ({
+  const prs = ((prsData as GitHubIssueSearchResponse).items ?? []).map((p) => ({
     number: p.number,
     title: p.title,
     repo: p.repository_url.replace(`${BASE}/repos/`, ""),
@@ -43,10 +45,10 @@ export async function GET() {
     draft: p.draft ?? false,
   }));
 
-  const pushes = (Array.isArray(eventsData) ? eventsData : [])
-    .filter((e: any) => e.type === "PushEvent")
+  const pushes = (Array.isArray(eventsData) ? eventsData as GitHubEvent[] : [])
+    .filter((e) => e.type === "PushEvent")
     .slice(0, 8)
-    .map((e: any) => ({
+    .map((e) => ({
       repo: e.repo.name,
       branch: (e.payload.ref ?? "").replace("refs/heads/", ""),
       commitCount: e.payload.commits?.length ?? 0,
