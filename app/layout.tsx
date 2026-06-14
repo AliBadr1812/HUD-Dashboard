@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
+import HudSettingsProvider from "./components/HudSettingsProvider";
 
 const geistMono = Geist_Mono({
   variable: "--font-mono",
@@ -20,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistMono.variable} h-full`}>
       <body className="min-h-full font-[family-name:var(--font-mono)]">
-        {children}
+        <HudSettingsProvider>
+          {children}
+        </HudSettingsProvider>
       </body>
     </html>
   );
