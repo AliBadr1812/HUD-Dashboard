@@ -27,7 +27,7 @@ const ALL_TOOLS = [
   { name: "calendar_add_event", label: "calendar"   },
 ];
 
-// ── CSS keyframes ─────────────────────────────────────────────────────────────
+// ── CSS keyframes — colors via CSS variables so themes apply ─────────────────
 
 const NEXUS_CSS = `
   @keyframes nx-cw  { to { transform: rotate(360deg); } }
@@ -55,7 +55,7 @@ const NEXUS_CSS = `
   }
 `;
 
-// ── NexusCore ─────────────────────────────────────────────────────────────────
+// ── NexusCore — all colors via CSS variables ──────────────────────────────────
 
 function NexusCore({ size = 120, active = false }: { size?: number; active?: boolean }) {
   const r3   = size * 0.46;
@@ -101,54 +101,54 @@ function NexusCore({ size = 120, active = false }: { size?: number; active?: boo
     ...abs,
     width: sz, height: sz,
     borderRadius: "50%",
-    background: "#1dd8c8",
+    background: "var(--ac-solid)",
     left: "50%", marginLeft: -(sz / 2),
     ...(pos === "t" ? { top: -(sz / 2) } : { bottom: -(sz / 2) }),
-    ...(glow ? { boxShadow: `0 0 ${sz * 2}px #1dd8c8` } : {}),
+    ...(glow ? { boxShadow: `0 0 ${sz * 2}px var(--ac-solid)` } : {}),
     ...(dim ? { opacity: 0.5 } : {}),
   });
 
   return (
     <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
       {/* Ripple 1 */}
-      <div style={{ ...centered(ripR * 2), border: "1px solid #1dd8c8", animation: `nx-ripple ${rp} ease-out infinite` }} />
+      <div style={{ ...centered(ripR * 2), border: "1px solid var(--ac-solid)", animation: `nx-ripple ${rp} ease-out infinite` }} />
       {/* Ripple 2 */}
-      <div style={{ ...centered(ripR * 2), border: "1px solid #1dd8c8", animation: `nx-ripple ${rp} ease-out infinite`, animationDelay: ripDelay(-0.5) }} />
+      <div style={{ ...centered(ripR * 2), border: "1px solid var(--ac-solid)", animation: `nx-ripple ${rp} ease-out infinite`, animationDelay: ripDelay(-0.5) }} />
       {/* Ripple 3 — active only */}
       {active && (
-        <div style={{ ...centered(ripR * 2), border: "1px solid #1dd8c8", animation: `nx-ripple ${rp} ease-out infinite`, animationDelay: ripDelay(-0.8) }} />
+        <div style={{ ...centered(ripR * 2), border: "1px solid var(--ac-solid)", animation: `nx-ripple ${rp} ease-out infinite`, animationDelay: ripDelay(-0.8) }} />
       )}
 
       {/* Outer glow layer */}
-      <div style={{ ...centered(g2R * 2), background: "#1dd8c8", animation: `nx-glow2 ${gp} ease-in-out infinite`, animationDelay: "-0.5s" }} />
+      <div style={{ ...centered(g2R * 2), background: "var(--ac-solid)", animation: `nx-glow2 ${gp} ease-in-out infinite`, animationDelay: "-0.5s" }} />
       {/* Inner glow layer */}
-      <div style={{ ...centered(g1R * 2), background: "#1dd8c8", animation: `nx-glow1 ${cp} ease-in-out infinite` }} />
+      <div style={{ ...centered(g1R * 2), background: "var(--ac-solid)", animation: `nx-glow1 ${cp} ease-in-out infinite` }} />
 
       {/* Outer ring */}
-      <div style={ringStyle(r3, "nx-cw", sp1, "#1dd8c820")}>
+      <div style={ringStyle(r3, "nx-cw", sp1, "var(--ac-20)")}>
         <div style={dotStyle(dotSz(0.065), "t", true)} />
         <div style={dotStyle(dotSz(0.033), "b", false, true)} />
       </div>
 
       {/* Mid ring */}
-      <div style={ringStyle(r2, "nx-ccw", sp2, "#1dd8c840")}>
+      <div style={ringStyle(r2, "nx-ccw", sp2, "var(--ac-30)")}>
         <div style={dotStyle(dotSz(0.055), "b", true)} />
         <div style={dotStyle(dotSz(0.028), "t", false, true)} />
       </div>
 
       {/* Inner ring */}
-      <div style={ringStyle(r1, "nx-cw", sp3, "#1dd8c870")}>
+      <div style={ringStyle(r1, "nx-cw", sp3, "var(--ac-45)")}>
         <div style={dotStyle(dotSz(0.045), "t", true)} />
       </div>
 
       {/* Core */}
       <div style={{
         ...centered(cR * 2),
-        background: "#1dd8c8",
+        background: "var(--ac-solid)",
         animation: `nx-core ${cp} ease-in-out infinite`,
         boxShadow: active
-          ? `0 0 ${Math.round(cR * 3)}px #1dd8c8, 0 0 ${Math.round(cR * 1.5)}px #fff5`
-          : `0 0 ${Math.round(cR * 2)}px #1dd8c8aa`,
+          ? `0 0 ${Math.round(cR * 3)}px var(--ac-solid), 0 0 ${Math.round(cR * 1.5)}px #fff5`
+          : `0 0 ${Math.round(cR * 2)}px var(--ac-70)`,
       }} />
     </div>
   );
@@ -171,16 +171,16 @@ function NexusMessage({ msg, index }: { msg: Message; index: number }) {
         display: "flex", alignItems: "center", justifyContent: "center",
         ...(isUser
           ? { background: "#ffffff06", border: "0.5px solid #ffffff15" }
-          : { background: "#1dd8c808", border: "0.5px solid #1dd8c828" }
+          : { background: "var(--ac-04)", border: "0.5px solid var(--ac-20)" }
         ),
       }}>
         {isUser ? (
           <span style={{ fontSize: 10, fontFamily: "monospace", letterSpacing: "0.05em", color: "#ffffff30" }}>ME</span>
         ) : (
           <div style={{
-            width: 10, height: 10, borderRadius: "50%", background: "#1dd8c8",
+            width: 10, height: 10, borderRadius: "50%", background: "var(--ac-solid)",
             animation: `nx-core ${msg.streaming ? "0.8s" : "2s"} ease-in-out infinite`,
-            boxShadow: "0 0 8px #1dd8c8",
+            boxShadow: "0 0 8px var(--ac-solid)",
           }} />
         )}
       </div>
@@ -189,18 +189,18 @@ function NexusMessage({ msg, index }: { msg: Message; index: number }) {
       <div className={`flex flex-col gap-1.5 max-w-[80%] ${isUser ? "items-end" : "items-start"}`}>
         {/* Tool calls */}
         {(msg.toolCalls ?? []).map((tc, i) => (
-          <div key={i} className="flex items-center gap-2 font-mono text-xs" style={{ color: "#1dd8c855" }}>
+          <div key={i} className="flex items-center gap-2 font-mono text-xs" style={{ color: "var(--ac-40)" }}>
             <span style={{
               display: "inline-block", width: 6, height: 6, borderRadius: "50%", flexShrink: 0,
-              background: tc.result ? "#1dd8c8" : "#1dd8c840",
+              background: tc.result ? "var(--ac-solid)" : "var(--ac-30)",
               animation: !tc.result ? "nx-cursor 0.8s step-end infinite" : "none",
-              boxShadow: tc.result ? "0 0 6px #1dd8c8" : "none",
+              boxShadow: tc.result ? "0 0 6px var(--ac-solid)" : "none",
             }} />
             <span>{tc.label}</span>
             {tc.result && (
               <>
-                <span style={{ color: "#1dd8c830" }}>→</span>
-                <span style={{ color: "#b8fff9aa" }}>{tc.result}</span>
+                <span style={{ color: "var(--ac-25)" }}>→</span>
+                <span style={{ color: "var(--color-accent-200)" }}>{tc.result}</span>
               </>
             )}
           </div>
@@ -212,13 +212,13 @@ function NexusMessage({ msg, index }: { msg: Message; index: number }) {
             className="text-[14px] leading-relaxed font-mono whitespace-pre-wrap px-4 py-3"
             style={isUser
               ? { color: "#ffffff45", background: "#ffffff05" }
-              : { color: "#b8fff9",   background: "#1dd8c808", borderLeft: "2px solid #1dd8c835" }
+              : { color: "var(--color-accent-100)", background: "var(--ac-04)", borderLeft: "2px solid var(--ac-25)" }
             }
           >
             {msg.content}
             {msg.streaming && !msg.toolCalls?.some(tc => !tc.result) && (
               <span className="inline-block w-[7px] h-[14px] ml-1 align-middle"
-                style={{ background: "#1dd8c8", animation: "nx-cursor 0.7s step-end infinite" }} />
+                style={{ background: "var(--ac-solid)", animation: "nx-cursor 0.7s step-end infinite" }} />
             )}
           </div>
         )}
@@ -236,13 +236,13 @@ function NexusCopilotMessage({ msg }: { msg: Message }) {
   return (
     <div className="flex flex-col gap-1">
       {(msg.toolCalls ?? []).map((tc, i) => (
-        <div key={i} className="flex items-center gap-1.5 font-mono text-[11px]" style={{ color: "#1dd8c840" }}>
+        <div key={i} className="flex items-center gap-1.5 font-mono text-[11px]" style={{ color: "var(--ac-30)" }}>
           <span style={{
             display: "inline-block", width: 5, height: 5, borderRadius: "50%", flexShrink: 0,
-            background: tc.result ? "#1dd8c8" : "#1dd8c830",
+            background: tc.result ? "var(--ac-solid)" : "var(--ac-25)",
           }} />
           <span>{tc.label}</span>
-          {tc.result && <span style={{ color: "#b8fff9aa", marginLeft: 3 }}>{tc.result}</span>}
+          {tc.result && <span style={{ color: "var(--color-accent-200)", marginLeft: 3 }}>{tc.result}</span>}
         </div>
       ))}
       {msg.content && (
@@ -250,13 +250,13 @@ function NexusCopilotMessage({ msg }: { msg: Message }) {
           className="font-mono text-sm leading-relaxed whitespace-pre-wrap"
           style={isUser
             ? { color: "#ffffff30", textAlign: "right" }
-            : { color: "#b8fff9bb", paddingLeft: 10, borderLeft: "2px solid #1dd8c828" }
+            : { color: "var(--color-accent-200)", paddingLeft: 10, borderLeft: "2px solid var(--ac-20)" }
           }
         >
           {msg.content}
           {msg.streaming && !msg.toolCalls?.some(tc => !tc.result) && (
             <span className="inline-block w-1.5 h-3.5 ml-0.5 align-middle"
-              style={{ background: "#1dd8c8", animation: "nx-cursor 0.7s step-end infinite" }} />
+              style={{ background: "var(--ac-solid)", animation: "nx-cursor 0.7s step-end infinite" }} />
           )}
         </div>
       )}
@@ -271,16 +271,16 @@ function NexusToolsPanel({ messages }: { messages: Message[] }) {
     messages.flatMap(m => (m.toolCalls ?? []).filter(tc => tc.result).map(tc => tc.name))
   );
   return (
-    <div style={{ width: 160, flexShrink: 0, borderLeft: "0.5px solid #1dd8c810", padding: "24px 16px" }}>
-      <div className="font-mono text-[9px] tracking-[0.22em] mb-5" style={{ color: "#1dd8c825" }}>MODULES</div>
+    <div style={{ width: 160, flexShrink: 0, borderLeft: "0.5px solid var(--ac-07)", padding: "24px 16px" }}>
+      <div className="font-mono text-[9px] tracking-[0.22em] mb-5" style={{ color: "var(--ac-20)" }}>MODULES</div>
       <div className="flex flex-col gap-2.5">
         {ALL_TOOLS.map(t => (
           <div key={t.name} className="flex items-center gap-2 font-mono text-[11px] tracking-wide"
-            style={{ color: used.has(t.name) ? "#1dd8c8" : "#1dd8c825" }}>
+            style={{ color: used.has(t.name) ? "var(--ac-solid)" : "var(--ac-20)" }}>
             <div style={{
               width: 5, height: 5, borderRadius: "50%", flexShrink: 0,
-              background: used.has(t.name) ? "#1dd8c8" : "#1dd8c818",
-              boxShadow: used.has(t.name) ? "0 0 6px #1dd8c8" : "none",
+              background: used.has(t.name) ? "var(--ac-solid)" : "var(--ac-10)",
+              boxShadow: used.has(t.name) ? "0 0 6px var(--ac-solid)" : "none",
             }} />
             {t.label}
           </div>
@@ -315,7 +315,7 @@ function NexusInput({
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
   };
 
-  const borderClr = listening ? "#1dd8c880" : streaming ? "#1dd8c840" : "#1dd8c820";
+  const borderClr = listening ? "var(--ac-60)" : streaming ? "var(--ac-30)" : "var(--ac-20)";
 
   return (
     <div
@@ -336,7 +336,7 @@ function NexusInput({
         rows={1}
         disabled={streaming || booting}
         className="flex-1 bg-transparent font-mono focus:outline-none resize-none leading-relaxed disabled:opacity-40 text-[14px]"
-        style={{ color: "#b8fff9", caretColor: "#1dd8c8", maxHeight: maxH, overflowY: "auto" }}
+        style={{ color: "var(--color-accent-100)", caretColor: "var(--ac-solid)", maxHeight: maxH, overflowY: "auto" }}
       />
       <div className="flex items-center gap-2 shrink-0 pb-0.5">
         {streaming && (
@@ -348,7 +348,7 @@ function NexusInput({
           onClick={toggleListening}
           disabled={streaming || booting}
           className="disabled:opacity-20 transition-colors"
-          style={{ color: listening ? "#1dd8c8" : "#1dd8c840" }}
+          style={{ color: listening ? "var(--ac-solid)" : "var(--ac-30)" }}
         >
           {listening ? <MicOff size={compact ? 13 : 15} /> : <Mic size={compact ? 13 : 15} />}
         </button>
@@ -356,7 +356,7 @@ function NexusInput({
           onClick={send}
           disabled={!input.trim() || streaming || booting}
           className="text-[10px] font-mono tracking-widest uppercase px-3 py-1.5 disabled:opacity-20 transition-all"
-          style={{ background: "#1dd8c810", border: "0.5px solid #1dd8c835", color: "#1dd8c8" }}
+          style={{ background: "var(--ac-10)", border: "0.5px solid var(--ac-25)", color: "var(--ac-solid)" }}
         >
           {compact ? "↑" : "SEND"}
         </button>
@@ -644,16 +644,16 @@ export default function AriaModal() {
           <button
             onClick={() => openAs("fullscreen")}
             className="flex items-center gap-2.5 transition-all"
-            style={{ border: "0.5px solid #1dd8c828", background: "#1dd8c806", padding: "5px 10px" }}
+            style={{ border: "0.5px solid var(--ac-20)", background: "var(--ac-04)", padding: "5px 10px" }}
             title="Open ARIA"
           >
             <NexusCore size={18} active={false} />
-            <span className="text-[9px] font-mono tracking-[0.22em] uppercase" style={{ color: "#1dd8c870" }}>ARIA</span>
+            <span className="text-[9px] font-mono tracking-[0.22em] uppercase" style={{ color: "var(--ac-45)" }}>ARIA</span>
           </button>
           <button
             onClick={() => openAs("copilot")}
             className="p-1 transition-all"
-            style={{ border: "0.5px solid #1dd8c818", color: "#1dd8c840" }}
+            style={{ border: "0.5px solid var(--ac-10)", color: "var(--ac-30)" }}
             title="Open ARIA as co-pilot"
           >
             <PanelRight size={12} />
@@ -671,28 +671,28 @@ export default function AriaModal() {
         <style>{NEXUS_CSS}</style>
         <div
           className="fixed top-0 right-0 bottom-0 z-[65] flex flex-col"
-          style={{ width: 420, background: "#07111a", borderLeft: "0.5px solid #1dd8c815" }}
+          style={{ width: 420, background: "#07111a", borderLeft: "0.5px solid var(--ac-08)" }}
         >
           {/* Header */}
-          <div className="flex items-center gap-3 px-5 py-4 shrink-0" style={{ borderBottom: "0.5px solid #1dd8c812" }}>
+          <div className="flex items-center gap-3 px-5 py-4 shrink-0" style={{ borderBottom: "0.5px solid var(--ac-07)" }}>
             <NexusCore size={26} active={streaming} />
-            <span className="text-sm font-mono tracking-[0.25em] uppercase" style={{ color: "#1dd8c8" }}>ARIA</span>
-            <span className="font-mono text-sm ml-0.5" style={{ color: streaming ? "#1dd8c8" : "#1dd8c840" }}>
+            <span className="text-sm font-mono tracking-[0.25em] uppercase" style={{ color: "var(--ac-solid)" }}>ARIA</span>
+            <span className="font-mono text-sm ml-0.5" style={{ color: streaming ? "var(--ac-solid)" : "var(--ac-30)" }}>
               {streaming ? "●" : "○"}
             </span>
             <div className="flex-1" />
             <button
               onClick={() => { setVoiceEnabled(v => !v); window.speechSynthesis?.cancel(); }}
               className="transition-colors p-1"
-              style={{ color: voiceEnabled ? "#1dd8c8" : "#1dd8c830" }}
+              style={{ color: voiceEnabled ? "var(--ac-solid)" : "var(--ac-25)" }}
               title={voiceEnabled ? "Mute" : "Enable voice"}
             >
               {voiceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
             </button>
-            <button onClick={() => setMode("fullscreen")} className="p-1 transition-colors" style={{ color: "#1dd8c830" }} title="Expand">
+            <button onClick={() => setMode("fullscreen")} className="p-1 transition-colors" style={{ color: "var(--ac-25)" }} title="Expand">
               <Maximize2 size={15} />
             </button>
-            <button onClick={() => setMode("closed")} className="p-1 transition-colors" style={{ color: "#1dd8c830" }}>
+            <button onClick={() => setMode("closed")} className="p-1 transition-colors" style={{ color: "var(--ac-25)" }}>
               <X size={15} />
             </button>
           </div>
@@ -701,22 +701,22 @@ export default function AriaModal() {
           <div
             ref={scrollRef}
             className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-5 px-5 py-5"
-            style={{ scrollbarWidth: "thin", scrollbarColor: "#1dd8c812 transparent" }}
+            style={{ scrollbarWidth: "thin", scrollbarColor: "var(--ac-07) transparent" }}
           >
             {booting ? (
               <div className="flex flex-col items-center gap-4 mt-8">
                 <NexusCore size={72} active={true} />
-                <span className="text-xs font-mono tracking-[0.3em] animate-pulse" style={{ color: "#1dd8c840" }}>INITIALIZING…</span>
+                <span className="text-xs font-mono tracking-[0.3em] animate-pulse" style={{ color: "var(--ac-30)" }}>INITIALIZING…</span>
               </div>
             ) : messages.length === 0 ? (
               <div className="flex flex-col gap-2">
-                <div className="text-[9px] font-mono tracking-[0.22em] mb-1" style={{ color: "#1dd8c828" }}>QUICK ACTIONS</div>
+                <div className="text-[9px] font-mono tracking-[0.22em] mb-1" style={{ color: "var(--ac-20)" }}>QUICK ACTIONS</div>
                 {quickPrompts.map(q => (
                   <button
                     key={q}
                     onClick={() => { setInput(q); inputRef.current?.focus(); }}
                     className="text-left px-3 py-2.5 text-[13px] font-mono tracking-wide transition-all"
-                    style={{ border: "0.5px solid #1dd8c818", color: "#1dd8c870", background: "transparent" }}
+                    style={{ border: "0.5px solid var(--ac-10)", color: "var(--ac-45)", background: "transparent" }}
                   >
                     {q}
                   </button>
@@ -728,12 +728,12 @@ export default function AriaModal() {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center px-5 py-2 shrink-0" style={{ borderTop: "0.5px solid #1dd8c808" }}>
-            <span className="text-[10px] font-mono tracking-widest" style={{ color: "#1dd8c820" }}>
+          <div className="flex items-center px-5 py-2 shrink-0" style={{ borderTop: "0.5px solid var(--ac-07)" }}>
+            <span className="text-[10px] font-mono tracking-widest" style={{ color: "var(--ac-20)" }}>
               qwen2.5:7b · {messages.filter(m => m.role === "user").length} msgs
             </span>
             <div className="flex-1" />
-            <button onClick={() => setMessages([])} className="text-[10px] font-mono tracking-widest uppercase transition-colors" style={{ color: "#1dd8c828" }}>
+            <button onClick={() => setMessages([])} className="text-[10px] font-mono tracking-widest uppercase transition-colors" style={{ color: "var(--ac-20)" }}>
               CLEAR
             </button>
           </div>
@@ -760,26 +760,26 @@ export default function AriaModal() {
       <div className="fixed inset-0 z-[70] flex flex-col overflow-hidden" style={{ background: "#07111a" }}>
 
         {/* Header */}
-        <div className="flex items-center gap-4 px-8 py-4 shrink-0" style={{ borderBottom: "0.5px solid #1dd8c818" }}>
+        <div className="flex items-center gap-4 px-8 py-4 shrink-0" style={{ borderBottom: "0.5px solid var(--ac-10)" }}>
           <div className="flex items-center gap-3">
             <NexusCore size={32} active={streaming || booting} />
-            <span className="text-base font-mono tracking-[0.28em] uppercase" style={{ color: "#1dd8c8" }}>ARIA</span>
+            <span className="text-base font-mono tracking-[0.28em] uppercase" style={{ color: "var(--ac-solid)" }}>ARIA</span>
           </div>
-          <span className="text-sm font-mono tracking-[0.15em]" style={{ color: streaming ? "#1dd8c8" : "#1dd8c842" }}>
+          <span className="text-sm font-mono tracking-[0.15em]" style={{ color: streaming ? "var(--ac-solid)" : "var(--ac-30)" }}>
             {booting ? "INITIALIZING…" : streaming ? "PROCESSING…" : "READY"}
           </span>
           <div className="flex-1" />
           <div className="flex items-center gap-2">
             <div
               className="text-[10px] font-mono tracking-[0.15em] px-4 py-1.5"
-              style={{ border: "0.5px solid #1dd8c850", color: "#1dd8c8", background: "#1dd8c810" }}
+              style={{ border: "0.5px solid var(--ac-40)", color: "var(--ac-solid)", background: "var(--ac-10)" }}
             >
               FULLSCREEN
             </div>
             <button
               onClick={() => setMode("copilot")}
               className="flex items-center gap-2 text-[10px] font-mono tracking-[0.15em] px-4 py-1.5 transition-all"
-              style={{ border: "0.5px solid #1dd8c820", color: "#1dd8c850", background: "transparent" }}
+              style={{ border: "0.5px solid var(--ac-20)", color: "var(--ac-40)", background: "transparent" }}
               title="Minimize to co-pilot"
             >
               <PanelRight size={12} /> CO-PILOT
@@ -788,11 +788,11 @@ export default function AriaModal() {
           <button
             onClick={() => { setVoiceEnabled(v => !v); window.speechSynthesis?.cancel(); }}
             className="p-2 transition-colors"
-            style={{ color: voiceEnabled ? "#1dd8c8" : "#1dd8c830" }}
+            style={{ color: voiceEnabled ? "var(--ac-solid)" : "var(--ac-25)" }}
           >
             {voiceEnabled ? <Volume2 size={17} /> : <VolumeX size={17} />}
           </button>
-          <button onClick={() => setMode("closed")} className="p-2 transition-colors" style={{ color: "#1dd8c830" }}>
+          <button onClick={() => setMode("closed")} className="p-2 transition-colors" style={{ color: "var(--ac-25)" }}>
             <X size={17} />
           </button>
         </div>
@@ -804,19 +804,19 @@ export default function AriaModal() {
             <div
               ref={scrollRef}
               className="flex-1 overflow-y-auto px-10 py-8 min-h-0 flex flex-col gap-7"
-              style={{ scrollbarWidth: "thin", scrollbarColor: "#1dd8c812 transparent" }}
+              style={{ scrollbarWidth: "thin", scrollbarColor: "var(--ac-07) transparent" }}
             >
               {booting ? (
                 <div className="flex flex-col items-center gap-6 mt-16">
                   <NexusCore size={160} active={true} />
-                  <span className="text-sm font-mono tracking-[0.4em] animate-pulse" style={{ color: "#1dd8c840" }}>
+                  <span className="text-sm font-mono tracking-[0.4em] animate-pulse" style={{ color: "var(--ac-30)" }}>
                     ARIA INITIALIZING
                   </span>
                 </div>
               ) : messages.length === 0 ? (
                 <div className="flex flex-col items-center gap-8 mt-10">
                   <NexusCore size={192} active={false} />
-                  <div className="text-sm font-mono tracking-[0.3em] uppercase" style={{ color: "#1dd8c835" }}>
+                  <div className="text-sm font-mono tracking-[0.3em] uppercase" style={{ color: "var(--ac-25)" }}>
                     Ask ARIA anything
                   </div>
                   <div className="grid grid-cols-2 gap-3 max-w-md w-full">
@@ -825,7 +825,7 @@ export default function AriaModal() {
                         key={q}
                         onClick={() => { setInput(q); inputRef.current?.focus(); }}
                         className="text-left px-4 py-3 text-sm font-mono tracking-wide transition-all"
-                        style={{ border: "0.5px solid #1dd8c818", color: "#1dd8c870", background: "transparent" }}
+                        style={{ border: "0.5px solid var(--ac-10)", color: "var(--ac-45)", background: "transparent" }}
                       >
                         {q}
                       </button>
@@ -843,7 +843,7 @@ export default function AriaModal() {
         </div>
 
         {/* Input row */}
-        <div className="px-10 py-6 shrink-0" style={{ borderTop: "0.5px solid #1dd8c812" }}>
+        <div className="px-10 py-6 shrink-0" style={{ borderTop: "0.5px solid var(--ac-07)" }}>
           <div className="max-w-4xl">
             <NexusInput
               inputRef={inputRef} input={input} setInput={setInput}
@@ -851,10 +851,10 @@ export default function AriaModal() {
               toggleListening={toggleListening} send={send} abort={abort}
             />
             <div className="flex justify-between mt-3">
-              <span className="text-[10px] font-mono tracking-widest" style={{ color: "#1dd8c820" }}>
+              <span className="text-[10px] font-mono tracking-widest" style={{ color: "var(--ac-20)" }}>
                 Enter to send · Shift+Enter for new line · Esc to close
               </span>
-              <button onClick={() => setMessages([])} className="text-[10px] font-mono tracking-widest uppercase transition-colors" style={{ color: "#1dd8c828" }}>
+              <button onClick={() => setMessages([])} className="text-[10px] font-mono tracking-widest uppercase transition-colors" style={{ color: "var(--ac-20)" }}>
                 CLEAR SESSION
               </button>
             </div>
