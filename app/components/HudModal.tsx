@@ -128,27 +128,27 @@ export default function HudModal({ isOpen, onClose, title, children, width = "38
         }}
       >
         {/* Corner brackets */}
-        <span className="absolute -top-px -left-px w-3.5 h-3.5 border-t-2 border-l-2 border-cyan-400" />
-        <span className="absolute -top-px -right-px w-3.5 h-3.5 border-t-2 border-r-2 border-cyan-400" />
-        <span className="absolute -bottom-px -left-px w-3.5 h-3.5 border-b-2 border-l-2 border-cyan-400" />
-        <span className="absolute -bottom-px -right-px w-3.5 h-3.5 border-b-2 border-r-2 border-cyan-400" />
+        <span className="absolute -top-px -left-px w-3.5 h-3.5 border-t-2 border-l-2 border-accent-400" />
+        <span className="absolute -top-px -right-px w-3.5 h-3.5 border-t-2 border-r-2 border-accent-400" />
+        <span className="absolute -bottom-px -left-px w-3.5 h-3.5 border-b-2 border-l-2 border-accent-400" />
+        <span className="absolute -bottom-px -right-px w-3.5 h-3.5 border-b-2 border-r-2 border-accent-400" />
 
-        <div className="bg-[#0a1620] border border-cyan-500/20">
+        <div className="bg-[#0a1620] border border-accent-500/20">
           {/* Header — drag handle */}
           <div
             onMouseDown={onTitleMouseDown}
-            className={`flex items-center justify-between px-4 py-2.5 border-b border-cyan-500/10 select-none ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
+            className={`flex items-center justify-between px-4 py-2.5 border-b border-accent-500/10 select-none ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
           >
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              <span className="text-[9px] text-cyan-400/70 tracking-[0.25em] uppercase font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent-400 animate-pulse" />
+              <span className="text-[9px] text-accent-400/70 tracking-[0.25em] uppercase font-mono">
                 {title}
               </span>
             </div>
             <button
               onMouseDown={(e) => e.stopPropagation()}
               onClick={onClose}
-              className="text-cyan-400/30 hover:text-cyan-300 transition-colors p-0.5"
+              className="text-accent-400/30 hover:text-accent-300 transition-colors p-0.5"
             >
               <X size={12} />
             </button>
