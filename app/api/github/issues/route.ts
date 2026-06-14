@@ -1,3 +1,5 @@
+import type { GitHubRepo, GitHubIssue, GitHubLabel } from "../../../types/github";
+
 const BASE = "https://api.github.com";
 
 function ghHeaders() {
@@ -21,13 +23,13 @@ async function ensureLabel(repo: string, name: string, color: string) {
   });
 }
 
-function mapIssue(i: any) {
+function mapIssue(i: GitHubIssue) {
   return {
     number: i.number,
     title: i.title,
     body: i.body ?? "",
     state: i.state,
-    labels: i.labels.map((l: any) => ({ name: l.name, color: l.color })),
+    labels: i.labels.map((l: GitHubLabel) => ({ name: l.name, color: l.color })),
     url: i.html_url,
     createdAt: i.created_at,
     updatedAt: i.updated_at,
@@ -44,7 +46,7 @@ export async function GET(req: Request) {
     if (!res.ok) return Response.json({ error: "Failed to fetch repos" }, { status: res.status });
     const data = await res.json();
     return Response.json({
-      repos: (Array.isArray(data) ? data : []).map((r: any) => ({
+      repos: (Array.isArray(data) ? data as GitHubRepo[] : []).map((r) => ({
         name: r.name,
         fullName: r.full_name,
         private: r.private,
@@ -61,11 +63,11 @@ export async function GET(req: Request) {
 
   const [openData, closedData] = await Promise.all([openRes.json(), closedRes.json()]);
 
-  const open = (Array.isArray(openData) ? openData : [])
-    .filter((i: any) => !i.pull_request)
+  const open = (Array.isArray(openData) ? openData as GitHubIssue[] : [])
+    .filter((i) => !i.pull_request)
     .map(mapIssue);
-  const closed = (Array.isArray(closedData) ? closedData : [])
-    .filter((i: any) => !i.pull_request)
+  const closed = (Array.isArray(closedData) ? closedData as GitHubIssue[] : [])
+    .filter((i) => !i.pull_request)
     .map(mapIssue);
 
   return Response.json({ open, closed });
