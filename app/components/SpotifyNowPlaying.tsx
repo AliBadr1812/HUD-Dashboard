@@ -462,91 +462,58 @@ function LibraryContent({ currentUri }: { currentUri: string | null }) {
 // ── Miniplayer ────────────────────────────────────────────────────────────────
 
 function SpotifyMiniplayer({
-  track, liveProgress, pct, onRestore, onClose, onSeek,
+  track, onRestore, onClose,
 }: {
   track: TrackData | null;
-  liveProgress: number;
-  pct: number;
   onRestore: () => void;
   onClose: () => void;
-  onSeek: (ms: number) => void;
 }) {
   return (
     <div
-      className="fixed z-[60] select-none"
-      style={{ bottom: 20, right: 20, width: 288, background: "#07111a", border: "0.5px solid color-mix(in srgb, var(--ac-solid) 25%, transparent)" }}
+      className="fixed z-[60] select-none overflow-hidden"
+      style={{ bottom: 20, right: 20, width: 160, height: 160, background: "#07111a", border: "0.5px solid color-mix(in srgb, var(--ac-solid) 25%, transparent)" }}
     >
-      {/* Title bar */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-accent-500/10">
-        <Music size={9} className="text-accent-400/35 shrink-0" />
-        <span className="text-[7px] font-mono tracking-[0.2em] text-accent-400/30 uppercase flex-1">Spotify — Miniplayer</span>
-        <button onClick={onRestore} className="text-accent-400/30 hover:text-accent-300 transition-colors p-0.5" title="Expand widget">
-          <Maximize2 size={10} />
+      {/* Album art fills the square */}
+      {track?.albumArt ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={track.albumArt} alt="" className="absolute inset-0 w-full h-full object-cover" />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Music size={28} className="text-accent-400/20" />
+        </div>
+      )}
+
+      {/* Gradient overlay — darker at bottom for controls */}
+      <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.35) 100%)" }} />
+
+      {/* Top-right: restore + close */}
+      <div className="absolute top-1.5 right-1.5 flex items-center gap-1">
+        <button onClick={onRestore} className="text-white/50 hover:text-white transition-colors p-1" style={{ background: "rgba(0,0,0,0.4)" }} title="Restore widget">
+          <Maximize2 size={9} />
         </button>
-        <button onClick={onClose} className="text-accent-400/30 hover:text-accent-300 transition-colors p-0.5" title="Close miniplayer">
-          <X size={10} />
+        <button onClick={onClose} className="text-white/50 hover:text-white transition-colors p-1" style={{ background: "rgba(0,0,0,0.4)" }} title="Close miniplayer">
+          <X size={9} />
         </button>
       </div>
 
-      {!track?.playing && (
-        <div className="px-3 py-4 text-[8px] text-accent-400/20 tracking-widest">NOTHING PLAYING</div>
-      )}
-
-      {track?.playing && (
-        <div className="p-3 space-y-2.5">
-          {/* Track info */}
-          <div className="flex items-center gap-2.5">
-            {track.albumArt ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={track.albumArt} alt="" className="w-10 h-10 shrink-0 object-cover border border-accent-500/15" />
-            ) : (
-              <div className="w-10 h-10 shrink-0 bg-accent-500/10 flex items-center justify-center border border-accent-500/15">
-                <Music size={12} className="text-accent-400/30" />
-              </div>
-            )}
-            <div className="min-w-0 flex-1">
-              <div className="text-[10px] text-white/80 font-medium truncate leading-tight">{track.trackName}</div>
-              <div className="text-[8px] text-accent-400/50 truncate mt-0.5">{track.artist}</div>
-            </div>
-          </div>
-
-          {/* Progress */}
-          {track.durationMs ? (
-            <div className="space-y-1">
-              <div
-                className="h-0.5 bg-accent-500/10 cursor-pointer"
-                onClick={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const frac = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-                  onSeek(Math.round(frac * track.durationMs!));
-                }}
-              >
-                <div className="h-full bg-accent-400/50 transition-all duration-1000" style={{ width: `${pct}%` }} />
-              </div>
-              <div className="flex justify-between text-[7px] font-mono text-accent-400/20">
-                <span>{fmtMs(liveProgress)}</span>
-                <span>{fmtMs(track.durationMs)}</span>
-              </div>
-            </div>
-          ) : null}
-
-          {/* Controls */}
-          <div className="flex items-center justify-center gap-5">
-            <button onClick={() => control("previous")} className="text-accent-400/35 hover:text-accent-300 transition-colors">
-              <SkipBack size={13} />
+      {/* Bottom: prev / play-pause / next */}
+      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-5 py-3">
+        {track?.playing !== undefined ? (
+          <>
+            <button onClick={() => control("previous")} className="text-white/60 hover:text-white transition-colors">
+              <SkipBack size={14} />
             </button>
-            <button
-              onClick={() => control(track.playing ? "pause" : "play")}
-              className="text-accent-400/60 hover:text-accent-300 transition-colors border border-accent-500/25 hover:border-accent-400/50 p-1"
-            >
-              {track.playing ? <Pause size={13} /> : <Play size={13} />}
+            <button onClick={() => control(track.playing ? "pause" : "play")} className="text-white hover:text-accent-300 transition-colors">
+              {track.playing ? <Pause size={20} /> : <Play size={20} />}
             </button>
-            <button onClick={() => control("next")} className="text-accent-400/35 hover:text-accent-300 transition-colors">
-              <SkipForward size={13} />
+            <button onClick={() => control("next")} className="text-white/60 hover:text-white transition-colors">
+              <SkipForward size={14} />
             </button>
-          </div>
-        </div>
-      )}
+          </>
+        ) : (
+          <span className="text-[7px] text-white/30 tracking-widest">NOTHING PLAYING</span>
+        )}
+      </div>
     </div>
   );
 }
@@ -632,30 +599,36 @@ export default function SpotifyNowPlaying() {
       {miniOpen && (
         <SpotifyMiniplayer
           track={track}
-          liveProgress={liveProgress}
-          pct={pct}
           onRestore={() => setMiniOpen(false)}
           onClose={() => setMiniOpen(false)}
-          onSeek={handleSeek}
         />
       )}
 
-      <HudPanel title="SPOTIFY" icon={<Music size={10} />} actions={actions}>
-        {/* Collapsed state when miniplayer is active */}
-        {miniOpen && (
-          <div className="flex items-center gap-2 text-[9px] text-accent-400/25 tracking-widest">
-            <PictureInPicture2 size={12} className="shrink-0" />
-            <span>MINIPLAYER ACTIVE</span>
+      {/* Compact header-only strip when miniplayer is active */}
+      {miniOpen && (
+        <div className="relative bg-[#0a1620] border border-accent-500/20 px-3 py-2">
+          <span className="absolute top-0 left-0 w-2.5 h-2.5 border-t-2 border-l-2 border-accent-400" />
+          <span className="absolute top-0 right-0 w-2.5 h-2.5 border-t-2 border-r-2 border-accent-400" />
+          <span className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b-2 border-l-2 border-accent-400" />
+          <span className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b-2 border-r-2 border-accent-400" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-[9px] text-accent-400/50 tracking-[0.3em] uppercase">
+              <Music size={10} className="text-accent-400/60 shrink-0" />
+              <span>SPOTIFY</span>
+            </div>
+            {actions}
           </div>
-        )}
+        </div>
+      )}
 
-        {!miniOpen && error && (
+      {!miniOpen && <HudPanel title="SPOTIFY" icon={<Music size={10} />} actions={actions}>
+        {error && (
           <div className="text-[9px] text-amber-400/50 tracking-wider">
             Add SPOTIFY_CLIENT_ID + SPOTIFY_CLIENT_SECRET to .env.local
           </div>
         )}
 
-        {!miniOpen && notAuthed && !error && (
+        {notAuthed && !error && (
           <div className="text-[9px] text-amber-400/50 tracking-wider">
             Visit{" "}
             <a href="/api/spotify/login" target="_blank" className="text-accent-400 underline">
@@ -665,14 +638,14 @@ export default function SpotifyNowPlaying() {
           </div>
         )}
 
-        {!miniOpen && !error && !notAuthed && !track?.playing && (
+        {!error && !notAuthed && !track?.playing && (
           <div className="flex items-center gap-2 text-[10px] text-accent-400/30">
             <Music size={14} className="opacity-40" />
             <span className="tracking-widest">NOTHING PLAYING</span>
           </div>
         )}
 
-        {!miniOpen && track?.playing && track.trackName && (
+        {track?.playing && track.trackName && (
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               {track.albumArt ? (
@@ -725,7 +698,7 @@ export default function SpotifyNowPlaying() {
             </div>
           </div>
         )}
-      </HudPanel>
+      </HudPanel>}
     </>
   );
 }
