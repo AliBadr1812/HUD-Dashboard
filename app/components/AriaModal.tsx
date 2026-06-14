@@ -113,14 +113,14 @@ function NexusCore({ size = 120, active = false }: { size?: number; active?: boo
       {/* Ripple 1 */}
       <div style={{ ...centered(ripR * 2), border: "1px solid var(--ac-solid)", animation: `nx-ripple ${rp} ease-out infinite` }} />
       {/* Ripple 2 */}
-      <div style={{ ...centered(ripR * 2), border: "1px solid var(--ac-solid)", animation: `nx-ripple ${rp} ease-out infinite`, animationDelay: ripDelay(-0.5) }} />
+      <div style={{ ...centered(ripR * 2), border: "1px solid var(--ac-solid)", animation: `nx-ripple ${rp} ease-out ${ripDelay(-0.5)} infinite` }} />
       {/* Ripple 3 — active only */}
       {active && (
-        <div style={{ ...centered(ripR * 2), border: "1px solid var(--ac-solid)", animation: `nx-ripple ${rp} ease-out infinite`, animationDelay: ripDelay(-0.8) }} />
+        <div style={{ ...centered(ripR * 2), border: "1px solid var(--ac-solid)", animation: `nx-ripple ${rp} ease-out ${ripDelay(-0.8)} infinite` }} />
       )}
 
       {/* Outer glow layer */}
-      <div style={{ ...centered(g2R * 2), background: "var(--ac-solid)", animation: `nx-glow2 ${gp} ease-in-out infinite`, animationDelay: "-0.5s" }} />
+      <div style={{ ...centered(g2R * 2), background: "var(--ac-solid)", animation: `nx-glow2 ${gp} ease-in-out -0.5s infinite` }} />
       {/* Inner glow layer */}
       <div style={{ ...centered(g1R * 2), background: "var(--ac-solid)", animation: `nx-glow1 ${cp} ease-in-out infinite` }} />
 
