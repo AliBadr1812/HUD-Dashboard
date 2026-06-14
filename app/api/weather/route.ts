@@ -1,3 +1,5 @@
+import type { OWMCurrentWeather, OWMForecastItem, OWMForecast } from "../../types/weather";
+
 const CONDITION_ICON: Record<string, string> = {
   Clear: "○",
   Clouds: "●",
@@ -47,20 +49,20 @@ export async function GET() {
     return Response.json({ error: "OpenWeatherMap request failed" }, { status: 502 });
   }
 
-  const current = await currentRes.json();
-  const forecast = await forecastRes.json();
+  const current: OWMCurrentWeather = await currentRes.json();
+  const forecast: OWMForecast = await forecastRes.json();
 
   // One reading per day at noon
   const seen = new Set<string>();
   const daily = forecast.list
-    .filter((item: any) => {
+    .filter((item: OWMForecastItem) => {
       const day = new Date(item.dt * 1000).toLocaleDateString("en-US", { weekday: "short" });
       if (seen.has(day)) return false;
       seen.add(day);
       return true;
     })
     .slice(0, 7)
-    .map((item: any) => ({
+    .map((item: OWMForecastItem) => ({
       day: new Date(item.dt * 1000)
         .toLocaleDateString("en-US", { weekday: "short" })
         .toUpperCase(),
@@ -68,7 +70,7 @@ export async function GET() {
       icon: CONDITION_ICON[item.weather[0].main] ?? "○",
     }));
 
-  const hourly = forecast.list.slice(0, 8).map((item: any) => ({
+  const hourly = forecast.list.slice(0, 8).map((item: OWMForecastItem) => ({
     time: fmtTime(item.dt),
     temp: Math.round(item.main.temp),
     icon: CONDITION_ICON[item.weather[0].main] ?? "○",
