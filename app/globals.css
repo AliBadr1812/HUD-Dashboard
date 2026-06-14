@@ -1,5 +1,82 @@
 @import "tailwindcss";
 
+/* ══════════════════════════════════════════════════════════════════════════════
+   ACCENT COLOR SYSTEM
+   All components use `accent-*` Tailwind classes (e.g. text-accent-400).
+   Changing [data-accent] on <html> swaps the entire palette.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* Default accent = Cyan */
+  --color-accent-50:   oklch(0.984 0.019 200.873);
+  --color-accent-100:  oklch(0.956 0.045 203.388);
+  --color-accent-200:  oklch(0.917 0.080 205.041);
+  --color-accent-300:  oklch(0.865 0.127 207.078);
+  --color-accent-400:  oklch(0.789 0.154 211.530);
+  --color-accent-500:  oklch(0.715 0.143 215.221);
+  --color-accent-600:  oklch(0.609 0.126 221.723);
+  --color-accent-700:  oklch(0.520 0.105 223.128);
+  --color-accent-800:  oklch(0.450 0.085 224.283);
+  --color-accent-900:  oklch(0.398 0.070 227.392);
+  --color-accent-950:  oklch(0.302 0.056 229.695);
+}
+
+/* ── Green ─────────────────────────────────────────────────────────────────── */
+[data-accent="green"] {
+  --color-accent-50:   oklch(0.981 0.019 145);
+  --color-accent-100:  oklch(0.962 0.052 145);
+  --color-accent-200:  oklch(0.925 0.102 145);
+  --color-accent-300:  oklch(0.792 0.209 151.711);
+  --color-accent-400:  oklch(0.723 0.219 149.579);
+  --color-accent-500:  oklch(0.648 0.200 131.684);
+  --color-accent-600:  oklch(0.627 0.194 149.214);
+  --color-accent-700:  oklch(0.527 0.154 150.069);
+  --color-accent-800:  oklch(0.432 0.095 152.535);
+  --color-accent-900:  oklch(0.363 0.073 152.927);
+  --color-accent-950:  oklch(0.266 0.051 152.934);
+}
+
+/* ── Amber ─────────────────────────────────────────────────────────────────── */
+[data-accent="amber"] {
+  --color-accent-50:   oklch(0.987 0.022 95);
+  --color-accent-100:  oklch(0.963 0.059 90);
+  --color-accent-200:  oklch(0.924 0.120 85);
+  --color-accent-300:  oklch(0.879 0.169 91.605);
+  --color-accent-400:  oklch(0.828 0.189 84.429);
+  --color-accent-500:  oklch(0.769 0.188 70.080);
+  --color-accent-600:  oklch(0.666 0.179 58.318);
+  --color-accent-700:  oklch(0.555 0.163 48.998);
+  --color-accent-800:  oklch(0.473 0.137 46.201);
+  --color-accent-900:  oklch(0.414 0.112 45.904);
+  --color-accent-950:  oklch(0.279 0.077 45.635);
+}
+
+/* ── Inline-style helpers (for SVG strokes, rgba() inline styles) ──────────── */
+/* Components reference these via style={{ color: 'var(--ac-N)' }} etc.        */
+:root {
+  --ac-04: color-mix(in oklch, var(--color-accent-400) 4%,  transparent);
+  --ac-07: color-mix(in oklch, var(--color-accent-400) 7%,  transparent);
+  --ac-08: color-mix(in oklch, var(--color-accent-400) 8%,  transparent);
+  --ac-10: color-mix(in oklch, var(--color-accent-400) 10%, transparent);
+  --ac-20: color-mix(in oklch, var(--color-accent-400) 20%, transparent);
+  --ac-25: color-mix(in oklch, var(--color-accent-400) 25%, transparent);
+  --ac-30: color-mix(in oklch, var(--color-accent-400) 30%, transparent);
+  --ac-40: color-mix(in oklch, var(--color-accent-400) 40%, transparent);
+  --ac-45: color-mix(in oklch, var(--color-accent-400) 45%, transparent);
+  --ac-60: color-mix(in oklch, var(--color-accent-400) 60%, transparent);
+  --ac-70: color-mix(in oklch, var(--color-accent-400) 70%, transparent);
+  --ac-solid: var(--color-accent-400);
+}
+
+/* ── Kill animations ─────────────────────────────────────────────────────────── */
+html.no-anim *,
+html.no-anim *::before,
+html.no-anim *::after {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* ── Base ────────────────────────────────────────────────────────────────────── */
 body {
   background: #080e14;
   min-height: 100vh;
@@ -27,7 +104,16 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(transparent, rgba(0, 229, 255, 0.04), transparent);
+  background: linear-gradient(transparent, var(--ac-04), transparent);
   animation: scan 8s linear infinite;
   z-index: 50;
+}
+
+/* ── Drag-and-drop cursor ────────────────────────────────────────────────────── */
+.widget-drag-handle { cursor: grab; }
+.widget-drag-handle:active { cursor: grabbing; }
+
+/* ── Widget resize: when a fixed height is applied, HudPanel fills the wrapper ── */
+[data-sized] > * {
+  height: 100%;
 }
