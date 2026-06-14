@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Newspaper, ArrowUpRight, ExternalLink } from "lucide-react";
 import HudPanel from "./HudPanel";
 import HudModal from "./HudModal";
+import { useHudShortcut } from "../hooks/useHudShortcut";
 
 type Headline = {
   id: number;
@@ -32,35 +33,35 @@ const MOCK: Headline[] = [
 ];
 
 const categoryColor: Record<string, string> = {
-  WORLD: "text-cyan-300",
-  POLITICS: "text-cyan-400",
+  WORLD: "text-accent-300",
+  POLITICS: "text-accent-400",
   CLIMATE: "text-emerald-400",
-  ECONOMY: "text-cyan-300",
+  ECONOMY: "text-accent-300",
   TECH: "text-sky-400",
-  SCIENCE: "text-cyan-400",
-  SPORT: "text-cyan-300",
+  SCIENCE: "text-accent-400",
+  SPORT: "text-accent-300",
 };
 
 function ArticleContent({ article }: { article: Headline }) {
   return (
     <div className="space-y-3">
       {article.image && (
-        <div className="w-full overflow-hidden border border-cyan-500/15" style={{ maxHeight: "200px" }}>
+        <div className="w-full overflow-hidden border border-accent-500/15" style={{ maxHeight: "200px" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={article.image} alt={article.headline} className="w-full object-cover" style={{ maxHeight: "200px" }} />
         </div>
       )}
       <div className="flex items-center gap-2">
-        <span className={`text-[8px] tracking-[0.25em] font-bold uppercase ${categoryColor[article.category] ?? "text-cyan-400"}`}>
+        <span className={`text-[8px] tracking-[0.25em] font-bold uppercase ${categoryColor[article.category] ?? "text-accent-400"}`}>
           {article.category}
         </span>
-        <span className="text-[8px] text-cyan-400/25 tracking-widest">{article.time}</span>
+        <span className="text-[8px] text-accent-400/25 tracking-widest">{article.time}</span>
       </div>
       <p className="text-[11px] text-white/90 leading-relaxed font-medium">{article.headline}</p>
       {article.description ? (
-        <p className="text-[10px] text-cyan-400/50 leading-relaxed border-t border-cyan-500/10 pt-3">{article.description}</p>
+        <p className="text-[10px] text-accent-400/50 leading-relaxed border-t border-accent-500/10 pt-3">{article.description}</p>
       ) : (
-        <p className="text-[9px] text-cyan-400/25 tracking-wider border-t border-cyan-500/10 pt-3">
+        <p className="text-[9px] text-accent-400/25 tracking-wider border-t border-accent-500/10 pt-3">
           Full article text not available in RSS feed.
         </p>
       )}
@@ -69,7 +70,7 @@ function ArticleContent({ article }: { article: Headline }) {
           href={article.link}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-[9px] text-cyan-400/50 hover:text-cyan-300 tracking-widest uppercase transition-colors pt-1"
+          className="flex items-center gap-1.5 text-[9px] text-accent-400/50 hover:text-accent-300 tracking-widest uppercase transition-colors pt-1"
         >
           <ExternalLink size={10} />
           Read full article on Al Jazeera
@@ -85,6 +86,7 @@ export default function News() {
   const [expandOpen, setExpandOpen] = useState(false);
   const [feedFilter, setFeedFilter] = useState("ALL");
   const [openArticles, setOpenArticles] = useState<OpenArticle[]>([]);
+  useHudShortcut("hud:open-news", () => setExpandOpen(true));
   const keyRef = useRef(0);
 
   useEffect(() => {
@@ -119,7 +121,7 @@ export default function News() {
   };
 
   const actions = (
-    <button onClick={() => setExpandOpen(true)} className="text-cyan-400/30 hover:text-cyan-300 transition-colors p-0.5">
+    <button onClick={() => setExpandOpen(true)} className="text-accent-400/30 hover:text-accent-300 transition-colors p-0.5">
       <ArrowUpRight size={11} />
     </button>
   );
@@ -141,37 +143,37 @@ export default function News() {
       <HudModal isOpen={expandOpen} onClose={() => setExpandOpen(false)} title="AL JAZEERA — FULL FEED" width="520px">
         <div className="-m-4">
           {/* Category filter */}
-          <div className="flex flex-wrap gap-1 px-4 py-2.5 border-b border-cyan-500/10">
+          <div className="flex flex-wrap gap-1 px-4 py-2.5 border-b border-accent-500/10">
             {["ALL", ...Array.from(new Set(headlines.map(h => h.category)))].map(cat => (
               <button
                 key={cat}
                 onClick={() => setFeedFilter(cat)}
                 className={`text-[7px] px-2 py-0.5 tracking-widest uppercase transition-colors border ${
                   feedFilter === cat
-                    ? "border-cyan-400/50 text-cyan-300 bg-cyan-500/10"
-                    : "border-cyan-500/15 text-cyan-400/30 hover:text-cyan-400/60"
+                    ? "border-accent-400/50 text-accent-300 bg-accent-500/10"
+                    : "border-accent-500/15 text-accent-400/30 hover:text-accent-400/60"
                 }`}
               >
                 {cat}
               </button>
             ))}
           </div>
-          <div className="overflow-y-auto divide-y divide-cyan-500/10" style={{ maxHeight: "60vh" }}>
+          <div className="overflow-y-auto divide-y divide-accent-500/10" style={{ maxHeight: "60vh" }}>
             {headlines
               .filter(h => feedFilter === "ALL" || h.category === feedFilter)
               .map(item => (
                 <button
                   key={item.id}
                   onClick={() => { setExpandOpen(false); openArticle(item); }}
-                  className="w-full text-left px-4 py-3 hover:bg-cyan-500/5 transition-colors group"
+                  className="w-full text-left px-4 py-3 hover:bg-accent-500/5 transition-colors group"
                 >
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-[8px] tracking-[0.2em] font-bold ${categoryColor[item.category] ?? "text-cyan-400"}`}>{item.category}</span>
-                    <span className="text-[8px] text-cyan-400/25 tracking-widest">{item.time}</span>
+                    <span className={`text-[8px] tracking-[0.2em] font-bold ${categoryColor[item.category] ?? "text-accent-400"}`}>{item.category}</span>
+                    <span className="text-[8px] text-accent-400/25 tracking-widest">{item.time}</span>
                   </div>
                   <p className="text-[11px] text-white/70 leading-relaxed group-hover:text-white/90 transition-colors">{item.headline}</p>
                   {item.description && (
-                    <p className="text-[9px] text-cyan-400/35 mt-1 leading-relaxed line-clamp-2">{item.description}</p>
+                    <p className="text-[9px] text-accent-400/35 mt-1 leading-relaxed line-clamp-2">{item.description}</p>
                   )}
                 </button>
               ))}
@@ -182,20 +184,20 @@ export default function News() {
       <HudPanel title="AL JAZEERA // LIVE FEED" icon={<Newspaper size={10} />} className="h-full" actions={actions}>
         <div className="flex justify-between items-center mb-3 -mt-1">
           <span />
-          {live && <span className="text-[8px] text-cyan-400/30 tracking-widest uppercase">LIVE</span>}
+          {live && <span className="text-[8px] text-accent-400/30 tracking-widest uppercase">LIVE</span>}
         </div>
-        <div className="divide-y divide-cyan-500/10">
+        <div className="divide-y divide-accent-500/10">
           {headlines.map((item) => (
             <button
               key={item.id}
               onClick={() => openArticle(item)}
-              className="w-full text-left py-3 first:pt-0 hover:bg-cyan-500/5 -mx-1 px-1 transition-colors group"
+              className="w-full text-left py-3 first:pt-0 hover:bg-accent-500/5 -mx-1 px-1 transition-colors group"
             >
               <div className="flex items-center gap-2 mb-1">
-                <span className={`text-[9px] tracking-[0.2em] font-bold ${categoryColor[item.category] ?? "text-cyan-400"}`}>
+                <span className={`text-[9px] tracking-[0.2em] font-bold ${categoryColor[item.category] ?? "text-accent-400"}`}>
                   {item.category}
                 </span>
-                <span className="text-[9px] text-cyan-400/25 tracking-widest">{item.time}</span>
+                <span className="text-[9px] text-accent-400/25 tracking-widest">{item.time}</span>
               </div>
               <p className="text-xs text-white/75 leading-relaxed group-hover:text-white/90 transition-colors">
                 {item.headline}
