@@ -1,5 +1,6 @@
 import { readFile } from "fs/promises";
 import { join } from "path";
+import type { PlaybackState, DashNowPlaying } from "../../types/spotify";
 
 async function getRefreshToken(): Promise<string | null> {
   // Prefer env var (survives reinstalls)
@@ -59,17 +60,18 @@ export async function GET() {
     return Response.json({ playing: false });
   }
 
-  const np = await npRes.json();
-  if (!np?.item) return Response.json({ playing: false });
+  const np: PlaybackState = await npRes.json();
+  if (!np?.item) return Response.json({ playing: false } satisfies DashNowPlaying);
 
-  return Response.json({
+  const result: DashNowPlaying = {
     playing: np.is_playing,
     uri: np.item.uri,
     trackName: np.item.name,
-    artist: np.item.artists.map((a: { name: string }) => a.name).join(", "),
+    artist: np.item.artists.map(a => a.name).join(", "),
     album: np.item.album.name,
     albumArt: np.item.album.images?.[0]?.url ?? null,
-    progressMs: np.progress_ms,
+    progressMs: np.progress_ms ?? undefined,
     durationMs: np.item.duration_ms,
-  });
+  };
+  return Response.json(result);
 }
