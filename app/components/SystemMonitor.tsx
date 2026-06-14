@@ -38,10 +38,10 @@ type DetailData = SystemData & {
   processesRunning: number | null;
 };
 
-function arcColor(pct: number) {
+function arcColor(pct: number): string {
   if (pct > 85) return "#f87171";
   if (pct > 65) return "#fbbf24";
-  return "#00e5ff";
+  return "var(--ac-solid)";
 }
 
 function ArcGauge({
@@ -53,7 +53,6 @@ function ArcGauge({
   const offset = circ * (1 - clamped / 100);
   const color = arcColor(pct);
 
-  // tick marks at 0 25 50 75 100 %
   const ticks = [0, 0.25, 0.5, 0.75, 1].map((t) => {
     const angle = -90 + t * 360;
     const rad = (angle * Math.PI) / 180;
@@ -66,44 +65,37 @@ function ArcGauge({
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className="text-[7px] tracking-[0.3em] uppercase" style={{ color: "rgba(0,229,255,0.3)" }}>
+      <div className="text-[7px] tracking-[0.3em] uppercase" style={{ color: "var(--ac-30)" }}>
         {label}
       </div>
       <div className="relative">
         <svg width="88" height="88" viewBox="0 0 88 88">
-          {/* outer decorative ring */}
-          <circle cx="44" cy="44" r={r + 12} fill="none" stroke="rgba(0,229,255,0.04)" strokeWidth="1" />
-          {/* tick marks */}
+          <circle cx="44" cy="44" r={r + 12} fill="none" style={{ stroke: "var(--ac-04)" }} strokeWidth="1" />
           {ticks.map((t, i) => (
-            <line key={i} x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2} stroke="rgba(0,229,255,0.2)" strokeWidth="1" />
+            <line key={i} x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2} style={{ stroke: "var(--ac-20)" }} strokeWidth="1" />
           ))}
-          {/* track */}
-          <circle cx="44" cy="44" r={r} fill="none" stroke="rgba(0,229,255,0.08)" strokeWidth="4" />
-          {/* arc */}
+          <circle cx="44" cy="44" r={r} fill="none" style={{ stroke: "var(--ac-08)" }} strokeWidth="4" />
           <circle
             cx="44" cy="44" r={r}
             fill="none"
-            stroke={color}
+            style={{ stroke: color, opacity: 0.85, transition: "stroke-dashoffset 0.7s ease" }}
             strokeWidth="4"
             strokeLinecap="butt"
             strokeDasharray={`${circ}`}
             strokeDashoffset={`${offset}`}
             transform="rotate(-90 44 44)"
-            style={{ opacity: 0.85, transition: "stroke-dashoffset 0.7s ease" }}
           />
-          {/* inner ring accent */}
-          <circle cx="44" cy="44" r={r - 8} fill="none" stroke="rgba(0,229,255,0.04)" strokeWidth="0.5" />
-          {/* pct number */}
-          <text x="44" y="41" textAnchor="middle" dominantBaseline="middle" fill={color} fontSize="16" fontWeight="bold" fontFamily="monospace" style={{ opacity: 0.9 }}>
+          <circle cx="44" cy="44" r={r - 8} fill="none" style={{ stroke: "var(--ac-04)" }} strokeWidth="0.5" />
+          <text x="44" y="41" textAnchor="middle" dominantBaseline="middle" style={{ fill: color }} fontSize="16" fontWeight="bold" fontFamily="monospace" opacity="0.9">
             {clamped}
           </text>
-          <text x="44" y="54" textAnchor="middle" fill="rgba(0,229,255,0.25)" fontSize="7" fontFamily="monospace">
+          <text x="44" y="54" textAnchor="middle" style={{ fill: "var(--ac-25)" }} fontSize="7" fontFamily="monospace">
             PCT
           </text>
         </svg>
       </div>
-      <div className="text-[8px] font-mono text-center" style={{ color: "rgba(0,229,255,0.45)" }}>{sub}</div>
-      {sub2 && <div className="text-[7px] font-mono text-center" style={{ color: "rgba(0,229,255,0.2)" }}>{sub2}</div>}
+      <div className="text-[8px] font-mono text-center" style={{ color: "var(--ac-45)" }}>{sub}</div>
+      {sub2 && <div className="text-[7px] font-mono text-center" style={{ color: "var(--ac-20)" }}>{sub2}</div>}
     </div>
   );
 }
@@ -111,9 +103,9 @@ function ArcGauge({
 function SectionDivider({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-2 my-3">
-      <div className="w-1.5 h-1.5 bg-cyan-400/40 rotate-45 shrink-0" />
-      <span className="text-[7px] tracking-[0.35em] uppercase" style={{ color: "rgba(0,229,255,0.25)" }}>{children}</span>
-      <div className="flex-1 border-t" style={{ borderColor: "rgba(0,229,255,0.08)" }} />
+      <div className="w-1.5 h-1.5 bg-accent-400/40 rotate-45 shrink-0" />
+      <span className="text-[7px] tracking-[0.35em] uppercase" style={{ color: "var(--ac-25)" }}>{children}</span>
+      <div className="flex-1 border-t" style={{ borderColor: "var(--ac-08)" }} />
     </div>
   );
 }
@@ -121,8 +113,8 @@ function SectionDivider({ children }: { children: React.ReactNode }) {
 function InfoRow({ label, value, accent }: { label: string; value: React.ReactNode; accent?: boolean }) {
   return (
     <div className="flex items-center justify-between py-1">
-      <span className="text-[8px] tracking-[0.15em] uppercase" style={{ color: "rgba(0,229,255,0.25)" }}>{label}</span>
-      <span className={`text-[9px] font-mono ${accent ? "" : ""}`} style={{ color: accent ? arcColor(0) : "rgba(0,229,255,0.6)" }}>
+      <span className="text-[8px] tracking-[0.15em] uppercase" style={{ color: "var(--ac-25)" }}>{label}</span>
+      <span className="text-[9px] font-mono" style={{ color: accent ? "var(--ac-solid)" : "var(--ac-60)" }}>
         {value}
       </span>
     </div>
@@ -155,7 +147,7 @@ function ExpandedContent() {
   if (!data) {
     return (
       <div className="flex items-center justify-center py-8">
-        <span className="text-[9px] tracking-[0.3em] uppercase animate-pulse" style={{ color: "rgba(0,229,255,0.2)" }}>
+        <span className="text-[9px] tracking-[0.3em] uppercase animate-pulse" style={{ color: "var(--ac-20)" }}>
           INITIALIZING...
         </span>
       </div>
@@ -164,14 +156,12 @@ function ExpandedContent() {
 
   return (
     <div>
-      {/* ── Three arc gauges ─────────────────────────────── */}
       <div className="flex justify-around pt-1 pb-2">
         <ArcGauge label="Processor" pct={data.cpu} sub={`${data.cpuPhysical}C / ${data.cpuCores}T`} sub2={data.cpuModel} />
         <ArcGauge label="Memory" pct={data.ram} sub={`${data.ramUsedGB} / ${data.ramTotalGB} GB`} sub2={`${data.ramAvailGB} GB free`} />
         <ArcGauge label="Storage" pct={data.disk} sub={`${data.diskUsedGB} / ${data.diskTotalGB} GB`} sub2={`${data.diskTotalGB - data.diskUsedGB} GB free`} />
       </div>
 
-      {/* ── Per-core spectrum ────────────────────────────── */}
       {data.cpuPerCore.length > 0 && (
         <>
           <SectionDivider>Core load spectrum</SectionDivider>
@@ -185,7 +175,7 @@ function ExpandedContent() {
                     className="w-full transition-all duration-700"
                     style={{ height: `${h}%`, background: col, opacity: 0.6 }}
                   />
-                  <span style={{ fontSize: "6px", color: "rgba(0,229,255,0.2)", fontFamily: "monospace" }}>{i + 1}</span>
+                  <span style={{ fontSize: "6px", color: "var(--ac-20)", fontFamily: "monospace" }}>{i + 1}</span>
                 </div>
               );
             })}
@@ -193,26 +183,27 @@ function ExpandedContent() {
         </>
       )}
 
-      {/* ── Bottom two-column grid ───────────────────────── */}
       <div className="grid grid-cols-2 gap-x-4 mt-1">
-
-        {/* LEFT: Network + Battery */}
         <div>
           <SectionDivider>Network</SectionDivider>
           <div className="space-y-0.5">
             <div className="flex items-center justify-between py-1">
               <div className="flex items-center gap-1.5">
-                <ArrowUp size={9} style={{ color: "rgba(0,229,255,0.4)" }} />
-                <span className="text-[8px] tracking-widest uppercase" style={{ color: "rgba(0,229,255,0.25)" }}>Upload</span>
+                <ArrowUp size={9} style={{ color: "var(--ac-40)" }} />
+                <span className="text-[8px] tracking-widest uppercase" style={{ color: "var(--ac-25)" }}>Upload</span>
               </div>
-              <span className="text-[10px] font-mono font-bold" style={{ color: "#00e5ff", opacity: 0.7 }}>{data.netUp} <span className="text-[7px] opacity-50">KB/s</span></span>
+              <span className="text-[10px] font-mono font-bold" style={{ color: "var(--ac-solid)", opacity: 0.7 }}>
+                {data.netUp} <span className="text-[7px] opacity-50">KB/s</span>
+              </span>
             </div>
             <div className="flex items-center justify-between py-1">
               <div className="flex items-center gap-1.5">
-                <ArrowDown size={9} style={{ color: "rgba(0,229,255,0.4)" }} />
-                <span className="text-[8px] tracking-widest uppercase" style={{ color: "rgba(0,229,255,0.25)" }}>Download</span>
+                <ArrowDown size={9} style={{ color: "var(--ac-40)" }} />
+                <span className="text-[8px] tracking-widest uppercase" style={{ color: "var(--ac-25)" }}>Download</span>
               </div>
-              <span className="text-[10px] font-mono font-bold" style={{ color: "#00e5ff", opacity: 0.7 }}>{data.netDown} <span className="text-[7px] opacity-50">KB/s</span></span>
+              <span className="text-[10px] font-mono font-bold" style={{ color: "var(--ac-solid)", opacity: 0.7 }}>
+                {data.netDown} <span className="text-[7px] opacity-50">KB/s</span>
+              </span>
             </div>
             {data.netIface && <InfoRow label="Interface" value={data.netIface} />}
           </div>
@@ -222,28 +213,28 @@ function ExpandedContent() {
               <SectionDivider>Battery</SectionDivider>
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[8px] tracking-widest uppercase" style={{ color: "rgba(0,229,255,0.25)" }}>
+                  <span className="text-[8px] tracking-widest uppercase" style={{ color: "var(--ac-25)" }}>
                     {data.battery.charging ? "Charging" : "Discharging"}
                   </span>
                   <span
                     className="text-[14px] font-mono font-bold"
-                    style={{ color: data.battery.percent < 20 ? "#f87171" : "#00e5ff", opacity: 0.8 }}
+                    style={{ color: data.battery.percent < 20 ? "#f87171" : "var(--ac-solid)", opacity: 0.8 }}
                   >
                     {data.battery.percent}%
                   </span>
                 </div>
-                <div className="h-1.5 w-full" style={{ background: "rgba(0,229,255,0.07)" }}>
+                <div className="h-1.5 w-full" style={{ background: "var(--ac-07)" }}>
                   <div
                     className="h-full transition-all duration-700"
                     style={{
                       width: `${data.battery.percent}%`,
-                      background: data.battery.percent < 20 ? "#f87171" : "#00e5ff",
+                      background: data.battery.percent < 20 ? "#f87171" : "var(--ac-solid)",
                       opacity: 0.6,
                     }}
                   />
                 </div>
                 {data.battery.timeRemaining && (
-                  <div className="text-[8px] font-mono" style={{ color: "rgba(0,229,255,0.3)" }}>
+                  <div className="text-[8px] font-mono" style={{ color: "var(--ac-30)" }}>
                     {data.battery.timeRemaining}m remaining
                   </div>
                 )}
@@ -252,7 +243,6 @@ function ExpandedContent() {
           )}
         </div>
 
-        {/* RIGHT: System specs */}
         <div>
           <SectionDivider>System</SectionDivider>
           <div className="space-y-0">
@@ -275,13 +265,11 @@ function ExpandedContent() {
   );
 }
 
-// ── Widget bar and bar row ────────────────────────────────────────────────────
-
-function Bar({ pct, color = "bg-cyan-400" }: { pct: number; color?: string }) {
+function Bar({ pct, color = "bg-accent-400" }: { pct: number; color?: string }) {
   const clamped = Math.min(100, Math.max(0, pct));
   const barColor = clamped > 85 ? "bg-red-400" : clamped > 65 ? "bg-amber-400" : color;
   return (
-    <div className="flex-1 h-1.5 bg-cyan-500/10 rounded-full overflow-hidden">
+    <div className="flex-1 h-1.5 bg-accent-500/10 rounded-full overflow-hidden">
       <div className={`h-full rounded-full transition-all duration-700 ${barColor}`} style={{ width: `${clamped}%` }} />
     </div>
   );
@@ -291,18 +279,16 @@ function Row({ label, pct, detail }: { label: string; pct: number; detail: strin
   return (
     <div className="space-y-1">
       <div className="flex justify-between items-center">
-        <span className="text-[9px] text-cyan-400/50 tracking-[0.2em] uppercase">{label}</span>
+        <span className="text-[9px] text-accent-400/50 tracking-[0.2em] uppercase">{label}</span>
         <div className="flex items-center gap-2">
-          <span className="text-[9px] text-cyan-400/30">{detail}</span>
-          <span className="text-[10px] text-cyan-300 font-bold w-8 text-right">{pct}%</span>
+          <span className="text-[9px] text-accent-400/30">{detail}</span>
+          <span className="text-[10px] text-accent-300 font-bold w-8 text-right">{pct}%</span>
         </div>
       </div>
       <Bar pct={pct} />
     </div>
   );
 }
-
-// ── Main widget ───────────────────────────────────────────────────────────────
 
 export default function SystemMonitor() {
   const [data, setData] = useState<SystemData | null>(null);
@@ -320,7 +306,7 @@ export default function SystemMonitor() {
   }, []);
 
   const actions = (
-    <button onClick={() => setExpandOpen(true)} className="text-cyan-400/30 hover:text-cyan-300 transition-colors p-0.5">
+    <button onClick={() => setExpandOpen(true)} className="text-accent-400/30 hover:text-accent-300 transition-colors p-0.5">
       <ArrowUpRight size={11} />
     </button>
   );
@@ -342,10 +328,10 @@ export default function SystemMonitor() {
             {["CPU", "RAM", "DISK"].map((l) => (
               <div key={l} className="space-y-1">
                 <div className="flex justify-between">
-                  <span className="text-[9px] text-cyan-400/50 tracking-[0.2em] uppercase">{l}</span>
-                  <span className="text-[9px] text-cyan-400/20">—</span>
+                  <span className="text-[9px] text-accent-400/50 tracking-[0.2em] uppercase">{l}</span>
+                  <span className="text-[9px] text-accent-400/20">—</span>
                 </div>
-                <div className="h-1.5 bg-cyan-500/10 rounded-full" />
+                <div className="h-1.5 bg-accent-500/10 rounded-full" />
               </div>
             ))}
           </div>
