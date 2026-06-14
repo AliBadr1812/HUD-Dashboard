@@ -5,6 +5,7 @@ import {
   GitGraph, Eye, Plus, Lock, Star, GitPullRequest, GitCommit,
   ChevronRight, ChevronLeft, X, Check, RefreshCw,
 } from "lucide-react";
+import { useHudShortcut } from "../hooks/useHudShortcut";
 import HudPanel from "./HudPanel";
 import HudModal from "./HudModal";
 
@@ -53,10 +54,10 @@ const EMPTY_WEEKS: Week[] = Array.from({ length: 16 }, () => ({
 }));
 
 function cellColor(count: number): string {
-  if (count === 0) return "bg-cyan-500/8";
-  if (count <= 2) return "bg-cyan-600/40";
-  if (count <= 5) return "bg-cyan-400/65";
-  return "bg-cyan-300";
+  if (count === 0) return "bg-accent-500/8";
+  if (count <= 2) return "bg-accent-600/40";
+  if (count <= 5) return "bg-accent-400/65";
+  return "bg-accent-300";
 }
 
 // ── Overview modal ─────────────────────────────────────────────────────────────
@@ -90,15 +91,15 @@ function OverviewContent() {
   return (
     <div className="-m-4">
       {/* Tab bar */}
-      <div className="flex border-b border-cyan-500/10">
+      <div className="flex border-b border-accent-500/10">
         {TABS.map(({ id, label }) => (
           <button
             key={id}
             onClick={() => setTab(id)}
             className={`px-4 py-2 text-[8px] tracking-[0.2em] uppercase transition-colors border-b-2 ${
               tab === id
-                ? "text-cyan-400/80 border-cyan-400/50"
-                : "text-cyan-400/25 border-transparent hover:text-cyan-400/50"
+                ? "text-accent-400/80 border-accent-400/50"
+                : "text-accent-400/25 border-transparent hover:text-accent-400/50"
             }`}
           >
             {label}
@@ -109,7 +110,7 @@ function OverviewContent() {
       <div className="overflow-y-auto" style={{ maxHeight: "60vh" }}>
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <span className="text-[8px] tracking-[0.3em] text-cyan-400/20 animate-pulse uppercase">Loading...</span>
+            <span className="text-[8px] tracking-[0.3em] text-accent-400/20 animate-pulse uppercase">Loading...</span>
           </div>
         )}
 
@@ -122,10 +123,10 @@ function OverviewContent() {
                 href={r.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block p-2.5 border border-cyan-500/10 hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-colors group"
+                className="block p-2.5 border border-accent-500/10 hover:border-accent-500/30 hover:bg-accent-500/5 transition-colors group"
               >
                 <div className="flex items-center gap-1.5 mb-2">
-                  {r.private && <Lock size={8} className="text-cyan-400/30 shrink-0" />}
+                  {r.private && <Lock size={8} className="text-accent-400/30 shrink-0" />}
                   <span className="text-[10px] text-white/70 truncate group-hover:text-white/90 transition-colors leading-tight">
                     {r.name}
                   </span>
@@ -137,21 +138,21 @@ function OverviewContent() {
                         className="w-1.5 h-1.5 rounded-full shrink-0"
                         style={{ background: LANG_COLORS[r.language] ?? "#888" }}
                       />
-                      <span className="text-[8px] text-cyan-400/40">{r.language}</span>
+                      <span className="text-[8px] text-accent-400/40">{r.language}</span>
                     </div>
                   )}
                   {r.stars > 0 && (
                     <div className="flex items-center gap-0.5">
-                      <Star size={8} className="text-cyan-400/25" />
-                      <span className="text-[8px] text-cyan-400/30">{r.stars}</span>
+                      <Star size={8} className="text-accent-400/25" />
+                      <span className="text-[8px] text-accent-400/30">{r.stars}</span>
                     </div>
                   )}
-                  <span className="text-[7px] text-cyan-400/20 ml-auto">{timeAgo(r.pushedAt)}</span>
+                  <span className="text-[7px] text-accent-400/20 ml-auto">{timeAgo(r.pushedAt)}</span>
                 </div>
               </a>
             ))}
             {repos.length === 0 && (
-              <div className="col-span-2 text-center py-10 text-[8px] text-cyan-400/20 tracking-widest uppercase">
+              <div className="col-span-2 text-center py-10 text-[8px] text-accent-400/20 tracking-widest uppercase">
                 No repos found
               </div>
             )}
@@ -160,9 +161,9 @@ function OverviewContent() {
 
         {/* Pull requests */}
         {tab === "prs" && !loading && (
-          <div className="divide-y divide-cyan-500/10">
+          <div className="divide-y divide-accent-500/10">
             {prs.length === 0 && (
-              <div className="text-center py-12 text-[8px] text-cyan-400/20 tracking-widest uppercase">
+              <div className="text-center py-12 text-[8px] text-accent-400/20 tracking-widest uppercase">
                 No open pull requests
               </div>
             )}
@@ -172,26 +173,26 @@ function OverviewContent() {
                 href={pr.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 px-4 py-3 hover:bg-cyan-500/5 transition-colors group"
+                className="flex items-start gap-3 px-4 py-3 hover:bg-accent-500/5 transition-colors group"
               >
                 <GitPullRequest
                   size={12}
-                  className={`mt-0.5 shrink-0 ${pr.draft ? "text-cyan-400/20" : "text-cyan-400/50"}`}
+                  className={`mt-0.5 shrink-0 ${pr.draft ? "text-accent-400/20" : "text-accent-400/50"}`}
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-[9px] text-cyan-400/35 font-mono">#{pr.number}</span>
+                    <span className="text-[9px] text-accent-400/35 font-mono">#{pr.number}</span>
                     {pr.draft && (
-                      <span className="text-[7px] text-cyan-400/25 border border-cyan-500/20 px-1 tracking-widest">
+                      <span className="text-[7px] text-accent-400/25 border border-accent-500/20 px-1 tracking-widest">
                         DRAFT
                       </span>
                     )}
-                    <span className="text-[7px] text-cyan-400/20 ml-auto">{timeAgo(pr.createdAt)}</span>
+                    <span className="text-[7px] text-accent-400/20 ml-auto">{timeAgo(pr.createdAt)}</span>
                   </div>
                   <div className="text-[10px] text-white/70 group-hover:text-white/90 transition-colors leading-snug">
                     {pr.title}
                   </div>
-                  <div className="text-[8px] text-cyan-400/30 mt-0.5 truncate">{pr.repo}</div>
+                  <div className="text-[8px] text-accent-400/30 mt-0.5 truncate">{pr.repo}</div>
                 </div>
               </a>
             ))}
@@ -200,26 +201,26 @@ function OverviewContent() {
 
         {/* Activity */}
         {tab === "activity" && !loading && (
-          <div className="divide-y divide-cyan-500/10">
+          <div className="divide-y divide-accent-500/10">
             {pushes.length === 0 && (
-              <div className="text-center py-12 text-[8px] text-cyan-400/20 tracking-widest uppercase">
+              <div className="text-center py-12 text-[8px] text-accent-400/20 tracking-widest uppercase">
                 No recent activity
               </div>
             )}
             {pushes.map((p, i) => (
               <div key={i} className="flex items-start gap-3 px-4 py-3">
-                <GitCommit size={12} className="text-cyan-400/40 mt-0.5 shrink-0" />
+                <GitCommit size={12} className="text-accent-400/40 mt-0.5 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className="text-[9px] text-cyan-400/50 truncate">{p.repo}</span>
+                    <span className="text-[9px] text-accent-400/50 truncate">{p.repo}</span>
                     {p.branch && (
-                      <span className="text-[8px] text-cyan-400/20 shrink-0">→ {p.branch}</span>
+                      <span className="text-[8px] text-accent-400/20 shrink-0">→ {p.branch}</span>
                     )}
-                    <span className="text-[7px] text-cyan-400/20 ml-auto shrink-0">{timeAgo(p.createdAt)}</span>
+                    <span className="text-[7px] text-accent-400/20 ml-auto shrink-0">{timeAgo(p.createdAt)}</span>
                   </div>
                   <div className="text-[10px] text-white/60 leading-snug truncate">{p.message}</div>
                   {p.commitCount > 1 && (
-                    <div className="text-[7px] text-cyan-400/25 mt-0.5">{p.commitCount} commits</div>
+                    <div className="text-[7px] text-accent-400/25 mt-0.5">{p.commitCount} commits</div>
                   )}
                 </div>
               </div>
@@ -236,7 +237,7 @@ function OverviewContent() {
 type KanbanCol = "backlog" | "in-progress" | "done";
 
 const COL_META: Record<KanbanCol, { label: string; emptyText: string; color: string }> = {
-  backlog:       { label: "BACKLOG",     emptyText: "No items",       color: "text-cyan-400/50" },
+  backlog:       { label: "BACKLOG",     emptyText: "No items",       color: "text-accent-400/50" },
   "in-progress": { label: "IN PROGRESS", emptyText: "Nothing active", color: "text-amber-400/60" },
   done:          { label: "DONE",        emptyText: "Nothing done yet", color: "text-emerald-400/60" },
 };
@@ -279,14 +280,14 @@ function IssueCard({
   const visibleLabels = issue.labels.filter((l) => l.name !== "in-progress");
 
   return (
-    <div className="border border-cyan-500/10 hover:border-cyan-500/20 transition-colors p-2 bg-white/[0.01]">
+    <div className="border border-accent-500/10 hover:border-accent-500/20 transition-colors p-2 bg-white/[0.01]">
       {editing ? (
         <div className="space-y-1.5">
           <input
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && save()}
-            className="w-full bg-transparent border border-cyan-500/20 text-[10px] text-white/80 px-2 py-1 focus:outline-none focus:border-cyan-400/40"
+            className="w-full bg-transparent border border-accent-500/20 text-[10px] text-white/80 px-2 py-1 focus:outline-none focus:border-accent-400/40"
             autoFocus
           />
           <textarea
@@ -294,20 +295,20 @@ function IssueCard({
             onChange={(e) => setEditBody(e.target.value)}
             rows={3}
             placeholder="Description..."
-            className="w-full bg-transparent border border-cyan-500/20 text-[9px] text-cyan-400/50 px-2 py-1 focus:outline-none focus:border-cyan-400/40 resize-none placeholder:text-cyan-400/15"
+            className="w-full bg-transparent border border-accent-500/20 text-[9px] text-accent-400/50 px-2 py-1 focus:outline-none focus:border-accent-400/40 resize-none placeholder:text-accent-400/15"
           />
           <div className="flex gap-1.5">
             <button
               onClick={save}
               disabled={saving || !editTitle.trim()}
-              className="flex items-center gap-1 px-2 py-0.5 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 text-[8px] tracking-widest uppercase transition-colors disabled:opacity-40"
+              className="flex items-center gap-1 px-2 py-0.5 bg-accent-500/15 hover:bg-accent-500/25 text-accent-300 text-[8px] tracking-widest uppercase transition-colors disabled:opacity-40"
             >
               <Check size={8} />
               {saving ? "..." : "Save"}
             </button>
             <button
               onClick={() => { setEditing(false); setEditTitle(issue.title); setEditBody(issue.body); }}
-              className="px-2 py-0.5 text-[8px] text-cyan-400/30 hover:text-cyan-400/60 tracking-widest uppercase transition-colors"
+              className="px-2 py-0.5 text-[8px] text-accent-400/30 hover:text-accent-400/60 tracking-widest uppercase transition-colors"
             >
               Cancel
             </button>
@@ -316,10 +317,10 @@ function IssueCard({
       ) : (
         <>
           <div className="flex items-start gap-1.5 mb-1.5">
-            <span className="text-[7px] text-cyan-400/20 font-mono mt-px shrink-0">#{issue.number}</span>
+            <span className="text-[7px] text-accent-400/20 font-mono mt-px shrink-0">#{issue.number}</span>
             <span
               onClick={() => { setEditing(true); setEditTitle(issue.title); setEditBody(issue.body); }}
-              className="text-[10px] text-white/72 leading-snug cursor-pointer hover:text-cyan-300 transition-colors flex-1"
+              className="text-[10px] text-white/72 leading-snug cursor-pointer hover:text-accent-300 transition-colors flex-1"
             >
               {issue.title}
             </span>
@@ -344,13 +345,13 @@ function IssueCard({
           )}
 
           <div className="flex items-center justify-between mt-1">
-            <span className="text-[7px] text-cyan-400/20">{timeAgo(issue.updatedAt)}</span>
+            <span className="text-[7px] text-accent-400/20">{timeAgo(issue.updatedAt)}</span>
             <div className="flex gap-0.5">
               {col === "done" ? (
                 <button
                   onClick={onReopen}
                   title="Reopen"
-                  className="text-cyan-400/20 hover:text-cyan-300 transition-colors p-0.5"
+                  className="text-accent-400/20 hover:text-accent-300 transition-colors p-0.5"
                 >
                   <ChevronLeft size={11} />
                 </button>
@@ -360,7 +361,7 @@ function IssueCard({
                     <button
                       onClick={onMoveBack}
                       title="Move back to Backlog"
-                      className="text-cyan-400/15 hover:text-cyan-400/50 transition-colors p-0.5"
+                      className="text-accent-400/15 hover:text-accent-400/50 transition-colors p-0.5"
                     >
                       <ChevronLeft size={11} />
                     </button>
@@ -368,14 +369,14 @@ function IssueCard({
                   <button
                     onClick={onMove}
                     title={col === "backlog" ? "Start — move to In Progress" : "Complete — move to Done"}
-                    className="text-cyan-400/20 hover:text-cyan-300 transition-colors p-0.5"
+                    className="text-accent-400/20 hover:text-accent-300 transition-colors p-0.5"
                   >
                     <ChevronRight size={11} />
                   </button>
                   <button
                     onClick={onClose}
                     title="Close issue"
-                    className="text-cyan-400/15 hover:text-red-400/60 transition-colors p-0.5"
+                    className="text-accent-400/15 hover:text-red-400/60 transition-colors p-0.5"
                   >
                     <X size={11} />
                   </button>
@@ -485,12 +486,12 @@ function WorkItemsContent() {
   return (
     <div className="-m-4">
       {/* Repo picker */}
-      <div className="flex items-center gap-3 px-4 py-2.5 border-b border-cyan-500/10">
-        <span className="text-[8px] text-cyan-400/30 tracking-[0.2em] uppercase shrink-0">Repo</span>
+      <div className="flex items-center gap-3 px-4 py-2.5 border-b border-accent-500/10">
+        <span className="text-[8px] text-accent-400/30 tracking-[0.2em] uppercase shrink-0">Repo</span>
         <select
           value={selectedRepo}
           onChange={(e) => setSelectedRepo(e.target.value)}
-          className="flex-1 bg-[#0a1620] text-[9px] text-cyan-400/70 border border-cyan-500/20 px-2 py-1 focus:outline-none focus:border-cyan-400/40 tracking-wider"
+          className="flex-1 bg-[#0a1620] text-[9px] text-accent-400/70 border border-accent-500/20 px-2 py-1 focus:outline-none focus:border-accent-400/40 tracking-wider"
         >
           {repoList.map((r) => (
             <option key={r.fullName} value={r.fullName}>{r.fullName}</option>
@@ -498,7 +499,7 @@ function WorkItemsContent() {
         </select>
         <button
           onClick={() => loadIssues(selectedRepo)}
-          className="text-cyan-400/25 hover:text-cyan-300 transition-colors"
+          className="text-accent-400/25 hover:text-accent-300 transition-colors"
           title="Refresh"
         >
           <RefreshCw size={11} />
@@ -507,27 +508,27 @@ function WorkItemsContent() {
 
       {loading ? (
         <div className="flex items-center justify-center py-12">
-          <span className="text-[8px] tracking-[0.3em] text-cyan-400/20 animate-pulse uppercase">Loading...</span>
+          <span className="text-[8px] tracking-[0.3em] text-accent-400/20 animate-pulse uppercase">Loading...</span>
         </div>
       ) : (
-        <div className="grid grid-cols-3 divide-x divide-cyan-500/10" style={{ minHeight: "55vh" }}>
+        <div className="grid grid-cols-3 divide-x divide-accent-500/10" style={{ minHeight: "55vh" }}>
           {COLS.map((col) => {
             const colIssues = issues.filter((i) => issueCol(i) === col);
             const meta = COL_META[col];
             return (
               <div key={col} className="flex flex-col min-h-0">
                 {/* Column header */}
-                <div className="flex items-center justify-between px-3 py-2 border-b border-cyan-500/10 shrink-0">
+                <div className="flex items-center justify-between px-3 py-2 border-b border-accent-500/10 shrink-0">
                   <div className="flex items-center gap-1.5">
                     <span className={`text-[8px] tracking-[0.18em] uppercase font-bold ${meta.color}`}>
                       {meta.label}
                     </span>
-                    <span className="text-[7px] text-cyan-400/20 font-mono">{colIssues.length}</span>
+                    <span className="text-[7px] text-accent-400/20 font-mono">{colIssues.length}</span>
                   </div>
                   {col !== "done" && (
                     <button
                       onClick={() => { setNewForm({ col, title: "", body: "" }); setNewTitle(""); setNewBody(""); }}
-                      className="text-cyan-400/20 hover:text-cyan-300 transition-colors"
+                      className="text-accent-400/20 hover:text-accent-300 transition-colors"
                       title="New issue"
                     >
                       <Plus size={10} />
@@ -537,34 +538,34 @@ function WorkItemsContent() {
 
                 {/* New issue inline form */}
                 {newForm?.col === col && (
-                  <div className="p-2 border-b border-cyan-500/10 bg-cyan-500/5 space-y-1.5 shrink-0">
+                  <div className="p-2 border-b border-accent-500/10 bg-accent-500/5 space-y-1.5 shrink-0">
                     <input
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && createIssue()}
                       placeholder="Issue title..."
                       autoFocus
-                      className="w-full bg-transparent border border-cyan-500/20 text-[10px] text-white/80 px-2 py-1 focus:outline-none focus:border-cyan-400/40 placeholder:text-cyan-400/15"
+                      className="w-full bg-transparent border border-accent-500/20 text-[10px] text-white/80 px-2 py-1 focus:outline-none focus:border-accent-400/40 placeholder:text-accent-400/15"
                     />
                     <textarea
                       value={newBody}
                       onChange={(e) => setNewBody(e.target.value)}
                       rows={2}
                       placeholder="Description (optional)"
-                      className="w-full bg-transparent border border-cyan-500/20 text-[9px] text-cyan-400/50 px-2 py-1 focus:outline-none focus:border-cyan-400/40 resize-none placeholder:text-cyan-400/15"
+                      className="w-full bg-transparent border border-accent-500/20 text-[9px] text-accent-400/50 px-2 py-1 focus:outline-none focus:border-accent-400/40 resize-none placeholder:text-accent-400/15"
                     />
                     <div className="flex gap-1.5">
                       <button
                         onClick={createIssue}
                         disabled={submitting || !newTitle.trim()}
-                        className="flex items-center gap-1 px-2 py-0.5 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 text-[8px] tracking-widest uppercase transition-colors disabled:opacity-40"
+                        className="flex items-center gap-1 px-2 py-0.5 bg-accent-500/15 hover:bg-accent-500/25 text-accent-300 text-[8px] tracking-widest uppercase transition-colors disabled:opacity-40"
                       >
                         <Check size={8} />
                         {submitting ? "..." : "Add"}
                       </button>
                       <button
                         onClick={() => setNewForm(null)}
-                        className="px-2 py-0.5 text-[8px] text-cyan-400/30 hover:text-cyan-400/60 tracking-widest uppercase transition-colors"
+                        className="px-2 py-0.5 text-[8px] text-accent-400/30 hover:text-accent-400/60 tracking-widest uppercase transition-colors"
                       >
                         Cancel
                       </button>
@@ -586,7 +587,7 @@ function WorkItemsContent() {
                     />
                   ))}
                   {colIssues.length === 0 && (
-                    <div className="text-center py-8 text-[7px] text-cyan-400/15 tracking-widest uppercase">
+                    <div className="text-center py-8 text-[7px] text-accent-400/15 tracking-widest uppercase">
                       {meta.emptyText}
                     </div>
                   )}
@@ -608,6 +609,8 @@ export default function GitHubActivity() {
   const [error, setError] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  useHudShortcut("hud:open-github",      () => setViewOpen(true));
+  useHudShortcut("hud:open-github-work", () => setAddOpen(true));
 
   useEffect(() => {
     const load = () =>
@@ -630,14 +633,14 @@ export default function GitHubActivity() {
     <>
       <button
         onClick={() => setViewOpen(true)}
-        className="text-cyan-400/30 hover:text-cyan-300 transition-colors p-0.5"
+        className="text-accent-400/30 hover:text-accent-300 transition-colors p-0.5"
         title="Overview"
       >
         <Eye size={11} />
       </button>
       <button
         onClick={() => setAddOpen(true)}
-        className="text-cyan-400/30 hover:text-cyan-300 transition-colors p-0.5"
+        className="text-accent-400/30 hover:text-accent-300 transition-colors p-0.5"
         title="Work items"
       >
         <Plus size={11} />
@@ -664,16 +667,16 @@ export default function GitHubActivity() {
 
         <div className="flex gap-4 mb-3">
           <div className="text-center">
-            <div className="text-lg font-bold text-cyan-300 leading-none">{data ? data.streak : "—"}</div>
-            <div className="text-[8px] text-cyan-400/40 tracking-widest mt-0.5">STREAK</div>
+            <div className="text-lg font-bold text-accent-300 leading-none">{data ? data.streak : "—"}</div>
+            <div className="text-[8px] text-accent-400/40 tracking-widest mt-0.5">STREAK</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-bold text-cyan-300 leading-none">{data ? data.todayCount : "—"}</div>
-            <div className="text-[8px] text-cyan-400/40 tracking-widest mt-0.5">TODAY</div>
+            <div className="text-lg font-bold text-accent-300 leading-none">{data ? data.todayCount : "—"}</div>
+            <div className="text-[8px] text-accent-400/40 tracking-widest mt-0.5">TODAY</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-bold text-cyan-300 leading-none">{data ? data.total : "—"}</div>
-            <div className="text-[8px] text-cyan-400/40 tracking-widest mt-0.5">THIS YEAR</div>
+            <div className="text-lg font-bold text-accent-300 leading-none">{data ? data.total : "—"}</div>
+            <div className="text-[8px] text-accent-400/40 tracking-widest mt-0.5">THIS YEAR</div>
           </div>
         </div>
 
@@ -692,9 +695,9 @@ export default function GitHubActivity() {
         </div>
 
         <div className="flex justify-between items-center mt-2">
-          <span className="text-[8px] text-cyan-400/20 tracking-wider">16 WEEKS</span>
+          <span className="text-[8px] text-accent-400/20 tracking-wider">16 WEEKS</span>
           {data && (
-            <span className="text-[8px] text-cyan-400/30 tracking-wider">@{data.username}</span>
+            <span className="text-[8px] text-accent-400/30 tracking-wider">@{data.username}</span>
           )}
         </div>
       </HudPanel>
